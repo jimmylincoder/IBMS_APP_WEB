@@ -16,7 +16,7 @@ import java.util.Map;
  * @author jimmy
  */
 @Component
-public class CameraListService implements ServiceHandler
+public class CameraListService extends ServiceHandler
 {
     @Autowired
     CameraManager cameraManager;
@@ -30,11 +30,9 @@ public class CameraListService implements ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Response response = new Response();
-        Map<String,Object> content = new HashMap<>();
-        content.put("camera_list", cameraManager.getCameraList());
-        response.setStatus(Response.STATUS_SUCCESS);
-        response.setContent(content);
-        return response;
+        return responseBody
+                .putData("camera_list",cameraManager.getCameraList())
+                .setStatus(Response.STATUS_SUCCESS)
+                .bulid();
     }
 }

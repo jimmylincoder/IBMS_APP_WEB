@@ -3,6 +3,8 @@ package com.suntek.ibms.api.camera;
 import com.suntek.ibms.componet.Request;
 import com.suntek.ibms.componet.Response;
 import com.suntek.ibms.componet.ServiceHandler;
+import com.suntek.ibms.componet.annotation.CheckType;
+import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.manager.CameraManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,10 +18,13 @@ import java.util.Map;
  * @author jimmy
  */
 @Component
-public class CameraInfoService implements ServiceHandler
+public class CameraInfoService extends ServiceHandler
 {
     @Autowired
     CameraManager cameraManager;
+
+    @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
+    String cameraId;
 
     @Override
     public String supportServiceName()
@@ -30,22 +35,9 @@ public class CameraInfoService implements ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Response response = new Response();
-        Map<String,Object> params = request.getParams();
-        Map<String,Object> content = new HashMap<>();
-        String cameraId = (String) params.get("camera_id");
-
-        if(cameraId == null || cameraId.equals(""))
-        {
-            response.setStatus(Response.STATUS_FAILURE);
-            response.setErrorMessage("摄像机id不能为空");
-            return response;
-        }
-
-        content.put("camera", cameraManager.getOne(cameraId));
-        response.setContent(content);
-        response.setStatus(Response.STATUS_SUCCESS);
-
-        return response;
+        return responseBody
+                .setStatus(Response.STATUS_SUCCESS)
+                .putData("camera",cameraManager.getOne(cameraId))
+                .bulid();
     }
 }

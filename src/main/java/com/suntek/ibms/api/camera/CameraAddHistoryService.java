@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author jimmy
  */
 @Component
-public class CameraAddHistoryService implements ServiceHandler
+public class CameraAddHistoryService extends ServiceHandler
 {
     @Override
     public String supportServiceName()

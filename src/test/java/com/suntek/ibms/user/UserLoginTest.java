@@ -2,15 +2,13 @@ package com.suntek.ibms.user;
 
 import com.suntek.ibms.App;
 import com.suntek.ibms.componet.Request;
+import com.suntek.ibms.componet.RequestBody;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 用户管理类测试
@@ -19,7 +17,7 @@ import java.util.Map;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserManagerTest
+public class UserLoginTest
 {
     @Autowired
     TestRestTemplate testRestTemplate;
@@ -27,11 +25,23 @@ public class UserManagerTest
     @Test
     public void testLoginSuccess()
     {
-        Request request = new Request();
-        Map<String,Object> params = new HashMap<>();
-        params.put("user_name","admin");
-        params.put("password","suntek");
-        request.setParams(params);
+        Request request = new RequestBody()
+                .putParams("user_name","admin")
+                .putParams("password","suntek")
+                .build();
+
+        String body = testRestTemplate.postForObject("/api/user/login",request,String.class);
+        System.out.println(body);
+    }
+
+    @Test
+    public void testLoginFail()
+    {
+        Request request = new RequestBody()
+                .putParams("user_name","admin")
+                .putParams("password","123")
+                .build();
+
         String body = testRestTemplate.postForObject("/api/user/login",request,String.class);
         System.out.println(body);
     }

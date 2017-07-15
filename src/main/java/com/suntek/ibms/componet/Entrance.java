@@ -72,6 +72,7 @@ public class Entrance
             }
             else
             {
+                handler.handleParams(request.getParams());
                 //根据服务进行相应的操作
                 response = handler.handle(request);
             }

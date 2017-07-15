@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author jimmy
  */
 @Component
-public class CameraPreviewService implements ServiceHandler
+public class CameraPreviewService extends ServiceHandler
 {
     @Override
     public String supportServiceName()

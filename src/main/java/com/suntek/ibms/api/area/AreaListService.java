@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author jimmy
  */
 @Component
-public class AreaListService implements ServiceHandler
+public class AreaListService extends ServiceHandler
 {
     @Override
     public String supportServiceName()

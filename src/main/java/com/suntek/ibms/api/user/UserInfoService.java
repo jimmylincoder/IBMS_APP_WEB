@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author jimmy
  */
 @Component
-public class UserInfoService implements ServiceHandler
+public class UserInfoService extends ServiceHandler
 {
     @Override
     public String supportServiceName()
