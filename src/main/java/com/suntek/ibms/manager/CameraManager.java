@@ -5,6 +5,9 @@ import com.suntek.ibms.repository.CameraRepository;
 import com.suntek.ibms.vo.CameraVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +21,9 @@ import java.util.List;
 @Service
 public class CameraManager
 {
+    //每页页数
+    private final int PAGE_SIZE = 15;
+
     @Autowired
     CameraRepository cameraRepository;
 
@@ -26,9 +32,35 @@ public class CameraManager
      *
      * @return
      */
-    public List<CameraVo> getCameraList()
+    public List<CameraVo> getCameraList(String areaId,String keyword,int page)
     {
-        List<Camera> cameras = cameraRepository.findAll();
+        Page<Camera> cameraPage = null;
+        Pageable pageable = new PageRequest(page - 1,PAGE_SIZE);
+        if(areaId == null || "".equals("") && keyword == null || "".equals(keyword))
+        {
+            cameraPage = cameraRepository.findAll(pageable);
+        }
+        else if(areaId != null || !"".equals(areaId) && keyword == null || "".equals(keyword))
+        {
+            cameraPage = cameraRepository.findByOrgCode(areaId,pageable);
+        }
+        else
+        {
+            cameraPage = cameraRepository.findByOrgCodeAndNameLike(areaId,keyword,pageable);
+        }
+        List<Camera> cameras = cameraPage.getContent();
+        List<CameraVo> cameraVos = poConvertVo(cameras);
+        return cameraVos;
+    }
+
+    /**
+     * 将摄像机po转成vo
+     *
+     * @param cameras
+     * @return
+     */
+    private List<CameraVo> poConvertVo(List<Camera> cameras)
+    {
         List<CameraVo> cameraVos = new ArrayList<>();
         for (Camera camera : cameras)
         {
@@ -38,6 +70,8 @@ public class CameraManager
         }
         return cameraVos;
     }
+
+
 
     /**
      * 根据id获取摄像机信息
