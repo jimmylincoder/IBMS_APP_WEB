@@ -4,6 +4,7 @@ import com.suntek.ibms.domain.Camera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -23,12 +24,12 @@ public interface CameraRepository extends JpaRepository<Camera,String>
     Page<Camera> findByOrgCode(String orgCode, Pageable pageable);
 
     /**
-     * 通过区域和关键字获取列表
+     * 通过关键字获取列表
      *
-     * @param orgCode
      * @param name
      * @param pageable
      * @return
      */
-    Page<Camera> findByOrgCodeAndNameLike(String orgCode,String name,Pageable pageable);
+    @Query("select camera from Camera camera where camera.name like %?1%")
+    Page<Camera> findByNameLike(String name,Pageable pageable);
 }

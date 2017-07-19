@@ -32,22 +32,33 @@ public class CameraManager
      *
      * @return
      */
-    public List<CameraVo> getCameraList(String areaId,String keyword,int page)
+    public List<CameraVo> getCameraList(String areaId,int page)
     {
         Page<Camera> cameraPage = null;
         Pageable pageable = new PageRequest(page - 1,PAGE_SIZE);
-        if(areaId == null || "".equals("") && keyword == null || "".equals(keyword))
+        if(areaId == null || "".equals(""))
         {
             cameraPage = cameraRepository.findAll(pageable);
         }
-        else if(areaId != null || !"".equals(areaId) && keyword == null || "".equals(keyword))
+        else if(areaId != null || !"".equals(areaId))
         {
             cameraPage = cameraRepository.findByOrgCode(areaId,pageable);
         }
-        else
-        {
-            cameraPage = cameraRepository.findByOrgCodeAndNameLike(areaId,keyword,pageable);
-        }
+        List<Camera> cameras = cameraPage.getContent();
+        List<CameraVo> cameraVos = poConvertVo(cameras);
+        return cameraVos;
+    }
+
+    /**
+     *  通过关键字获取摄像机列表
+     *
+     * @param keyword
+     * @param page
+     * @return
+     */
+    public List<CameraVo> getCameraListByKeyword(String keyword,int page)
+    {
+        Page<Camera> cameraPage = cameraRepository.findByNameLike(keyword,new PageRequest(page - 1,PAGE_SIZE));
         List<Camera> cameras = cameraPage.getContent();
         List<CameraVo> cameraVos = poConvertVo(cameras);
         return cameraVos;

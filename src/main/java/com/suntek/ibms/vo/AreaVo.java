@@ -4,32 +4,33 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * 区域vo
  *
  * @author jimmy
  */
-public class AreaVo
+public class AreaVo implements Serializable
 {
     //区域id
-    @JSONField(name = "ID")
+    @JSONField(name = "id")
     private String id;
 
     //区域名称
-    @JSONField(name = "NODE_NAME")
+    @JSONField(name = "name")
     private String name;
 
     //排序顺序
-    @JSONField(name = "PARENT_NODE_ID")
+    @JSONField(name = "parent_id")
     private String parentId;
 
     //节点层级
-    @JSONField(name = "NODE_LEVEL")
+    @JSONField(name = "node_level")
     private String nodeLevel;
 
     //机构号
-    @JSONField(name = "ORG_CODE")
+    @JSONField(name = "org_code")
     private String ogrCode;
 
     public String getId()
