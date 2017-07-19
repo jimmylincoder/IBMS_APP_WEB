@@ -13,9 +13,6 @@ import java.util.Map;
  */
 public abstract class ServiceHandler
 {
-    //返回响应体拼接类
-    protected ResponseBody responseBody = new ResponseBody();
-
     /**
      * 返回服务名
      */

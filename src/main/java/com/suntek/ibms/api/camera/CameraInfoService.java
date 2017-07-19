@@ -2,6 +2,7 @@ package com.suntek.ibms.api.camera;
 
 import com.suntek.ibms.componet.Request;
 import com.suntek.ibms.componet.Response;
+import com.suntek.ibms.componet.ResponseBody;
 import com.suntek.ibms.componet.ServiceHandler;
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
@@ -35,7 +36,7 @@ public class CameraInfoService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        return responseBody
+        return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .putData("camera",cameraManager.getOne(cameraId))
                 .bulid();

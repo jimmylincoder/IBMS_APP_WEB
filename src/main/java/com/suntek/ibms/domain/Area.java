@@ -11,21 +11,29 @@ import javax.persistence.Table;
  * @author jimmy
  */
 @Entity
-@Table(name= "sys_dept")
+@Table(name= "sys_structure_info")
 public class Area
 {
     //区域id
     @Id
-    @Column(name = "DEPT_CODE")
+    @Column(name = "ID")
     private String id;
 
     //区域名称
-    @Column(name = "DEPT_NAME")
+    @Column(name = "NODE_NAME")
     private String name;
 
     //排序顺序
-    @Column(name = "DEPT_SORT")
-    private String sort;
+    @Column(name = "PARENT_NODE_ID")
+    private String parentId;
+
+    //节点层级
+    @Column(name = "NODE_LEVEL")
+    private String nodeLevel;
+
+    //机构号
+    @Column(name = "ORG_CODE")
+    private String ogrCode;
 
     public String getId()
     {
@@ -47,13 +55,33 @@ public class Area
         this.name = name;
     }
 
-    public String getSort()
+    public String getParentId()
     {
-        return sort;
+        return parentId;
     }
 
-    public void setSort(String sort)
+    public void setParentId(String parentId)
     {
-        this.sort = sort;
+        this.parentId = parentId;
+    }
+
+    public String getNodeLevel()
+    {
+        return nodeLevel;
+    }
+
+    public void setNodeLevel(String nodeLevel)
+    {
+        this.nodeLevel = nodeLevel;
+    }
+
+    public String getOgrCode()
+    {
+        return ogrCode;
+    }
+
+    public void setOgrCode(String ogrCode)
+    {
+        this.ogrCode = ogrCode;
     }
 }

@@ -2,6 +2,7 @@ package com.suntek.ibms.api.user;
 
 import com.suntek.ibms.componet.Request;
 import com.suntek.ibms.componet.Response;
+import com.suntek.ibms.componet.ResponseBody;
 import com.suntek.ibms.componet.ServiceHandler;
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
@@ -39,16 +40,17 @@ public class UserLoginService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
+        //返回响应体拼接类
         UserVo userVo = userManager.login(userName, password);
         if (userVo == null)
         {
-            return responseBody
+            return new ResponseBody()
                     .setStatus(Response.STATUS_FAILURE)
                     .setErrorMessage("用户不存在或密码错误")
                     .bulid();
         }
 
-        return responseBody
+        return new ResponseBody()
                 .putData("user", userVo)
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

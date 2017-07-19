@@ -14,6 +14,11 @@ public class ResponseBody
 
     private Map<String,Object> content = new HashMap<>();
 
+    public ResponseBody()
+    {
+        content.clear();
+    }
+
     public ResponseBody putData(String key,Object value)
     {
         content.put(key,value);

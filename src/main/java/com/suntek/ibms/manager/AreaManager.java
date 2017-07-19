@@ -1,6 +1,10 @@
 package com.suntek.ibms.manager;
 
+import com.suntek.ibms.domain.Area;
+import com.suntek.ibms.repository.AreaRepository;
 import com.suntek.ibms.vo.AreaVo;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,17 +18,26 @@ import java.util.List;
 @Service
 public class AreaManager
 {
-    private final String ROOT_ID = "01";
+    @Autowired
+    AreaRepository areaRepository;
+
+    private final String ROOT_ID = "1";
 
     /**
      * 通过父id获取区域列表
      *
-     * @return  区域列表
+     * @return 区域列表
      */
     public List<AreaVo> getAreaListByParentId(String parentId)
     {
         List<AreaVo> areaVos = new ArrayList<>();
-
+        List<Area> areas = areaRepository.findByParentId(parentId);
+        for (Area area : areas)
+        {
+            AreaVo areaVo = new AreaVo();
+            BeanUtils.copyProperties(area, areaVo);
+            areaVos.add(areaVo);
+        }
         return areaVos;
     }
 
@@ -35,6 +48,14 @@ public class AreaManager
      */
     public List<AreaVo> getAreaListByRootId()
     {
-        return getAreaListByParentId(ROOT_ID);
+        List<AreaVo> areaVos = new ArrayList<>();
+        List<Area> areas = areaRepository.findByParentId(ROOT_ID);
+        for (Area area : areas)
+        {
+            AreaVo areaVo = new AreaVo();
+            BeanUtils.copyProperties(area, areaVo);
+            areaVos.add(areaVo);
+        }
+        return areaVos;
     }
 }

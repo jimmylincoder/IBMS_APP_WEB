@@ -3,6 +3,8 @@ package com.suntek.ibms.repository;
 import com.suntek.ibms.domain.Area;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  *  区域仓库
  *
@@ -10,5 +12,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface AreaRepository extends JpaRepository<Area,String>
 {
-
+    /**
+     * 根据父id查询列表
+     *
+     * @param parentId 父id
+     * @return
+     */
+    List<Area> findByParentId(String parentId);
 }
