@@ -40,6 +40,9 @@ public class CameraVo implements Serializable
     @JSONField(name = "password")
     private String password;
 
+    @JSONField(name = "play_time")
+    private String playTime;
+
     public String getId()
     {
         return id;
@@ -138,5 +141,15 @@ public class CameraVo implements Serializable
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public String getPlayTime()
+    {
+        return playTime;
+    }
+
+    public void setPlayTime(String playTime)
+    {
+        this.playTime = playTime;
     }
 }

@@ -32,4 +32,13 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      */
     @Query("select camera from Camera camera where camera.name like %?1%")
     Page<Camera> findByNameLike(String name,Pageable pageable);
+
+    /**
+     * 查询对应id的分页摄像机列表
+     *
+     * @param cameraId
+     * @param pageable
+     * @return
+     */
+    Page<Camera> findByIdIn(List<String> cameraId,Pageable pageable);
 }

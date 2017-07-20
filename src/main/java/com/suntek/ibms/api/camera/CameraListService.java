@@ -7,7 +7,9 @@ import com.suntek.ibms.componet.ServiceHandler;
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.manager.CameraManager;
+import com.suntek.ibms.vo.CameraVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -42,8 +44,10 @@ public class CameraListService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
+        Page<CameraVo> cameraVoPage = cameraManager.getCameraList(areaId,Integer.parseInt(page));
         return new ResponseBody()
-                .putData("camera_list",cameraManager.getCameraList(areaId,Integer.parseInt(page)))
+                .putData("camera_list",cameraVoPage.getContent())
+                .putData("total_page",cameraVoPage.getTotalPages())
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }
