@@ -1,6 +1,9 @@
 package com.suntek.ibms.repository;
 
+import com.suntek.ibms.domain.Camera;
 import com.suntek.ibms.domain.CameraHistory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -10,5 +13,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface CameraHistoryRepository extends JpaRepository<CameraHistory,String>
 {
-    CameraHistory findByCameraId(String cameraId);
+    CameraHistory findByCamera(Camera camera);
+
+    Page<CameraHistory> findByOrderByPlayTimeDesc(Pageable pageable);
+
+    void deleteByCamera(Camera camera);
 }

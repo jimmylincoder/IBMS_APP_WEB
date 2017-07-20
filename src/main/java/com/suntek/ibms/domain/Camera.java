@@ -1,9 +1,6 @@
 package com.suntek.ibms.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 摄像机实体

@@ -21,8 +21,9 @@ public class CameraHistory
     private String id;
 
     //摄像头id
-    @Column(name = "CAMERA_ID")
-    private String cameraId;
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = true)
+    @JoinColumn(name = "CAMERA_ID",nullable = false)
+    private Camera camera;
 
     //播放时间
     @Column(name = "PLAY_TIME")
@@ -38,14 +39,14 @@ public class CameraHistory
         this.id = id;
     }
 
-    public String getCameraId()
+    public Camera getCamera()
     {
-        return cameraId;
+        return camera;
     }
 
-    public void setCameraId(String cameraId)
+    public void setCamera(Camera camera)
     {
-        this.cameraId = cameraId;
+        this.camera = camera;
     }
 
     public long getPlayTime()

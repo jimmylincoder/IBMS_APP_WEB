@@ -41,7 +41,7 @@ public class CameraVo implements Serializable
     private String password;
 
     @JSONField(name = "play_time")
-    private String playTime;
+    private long playTime;
 
     public String getId()
     {
@@ -143,12 +143,12 @@ public class CameraVo implements Serializable
         this.password = password;
     }
 
-    public String getPlayTime()
+    public long getPlayTime()
     {
         return playTime;
     }
 
-    public void setPlayTime(String playTime)
+    public void setPlayTime(long playTime)
     {
         this.playTime = playTime;
     }

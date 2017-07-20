@@ -11,8 +11,12 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -129,26 +133,19 @@ public class CameraManager
      */
     public Page<CameraVo> getHistory(int page)
     {
-        //获取历史记录id
-        List<CameraHistory> cameraHistories = cameraHistoryRepository.findAll();
-        List<String> cameraIds = new ArrayList<>();
-        for(CameraHistory cameraHistory : cameraHistories)
-        {
-            cameraIds.add(cameraHistory.getCameraId());
-        }
-        //取出对应id信息
-        Page<Camera> cameraPage = cameraRepository.findByIdIn(cameraIds,new PageRequest(page - 1,PAGE_SIZE));
-        Page<CameraVo> cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
+        Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByOrderByPlayTimeDesc(new PageRequest(page -1,PAGE_SIZE));
+        Page<CameraVo> cameraVoPage = cameraHistoryPage.map(new Converter<CameraHistory, CameraVo>()
         {
             @Override
-            public CameraVo convert(Camera camera)
+            public CameraVo convert(CameraHistory cameraHistory)
             {
+                Camera camera = cameraHistory.getCamera();
                 CameraVo cameraVo = new CameraVo();
                 BeanUtils.copyProperties(camera,cameraVo);
+                cameraVo.setPlayTime(cameraHistory.getPlayTime());
                 return cameraVo;
             }
         });
-        List<Camera> cameras = cameraPage.getContent();
         return  cameraVoPage;
     }
 
@@ -164,22 +161,49 @@ public class CameraManager
             throw new Exception("该摄像头不存在");
 
         //查询是否已存在该摄像头信息，不存在更插入，存在则更新时间
-        CameraHistory cameraHistory = cameraHistoryRepository.findByCameraId(cameraId);
+        Camera camera = new Camera();
+        camera.setId(cameraId);
+        long playTime = new Date().getTime();
+        CameraHistory cameraHistory = cameraHistoryRepository.findByCamera(camera);
         if(cameraHistory == null)
         {
             cameraHistory = new CameraHistory();
-            cameraHistory.setCameraId(cameraId);
-            cameraHistory.setPlayTime(new Date().getTime());
+            cameraHistory.setCamera(camera);
+            cameraHistory.setPlayTime(playTime);
         }else
         {
-            cameraHistory.setPlayTime(new Date().getTime());
+            cameraHistory.setPlayTime(playTime);
         }
         cameraHistoryRepository.save(cameraHistory);
 
         //获取该摄像头信息
-        Camera camera = cameraRepository.findOne(cameraId);
+        Camera cameraResult = cameraRepository.findOne(cameraId);
         CameraVo cameraVo = new CameraVo();
-        BeanUtils.copyProperties(camera,cameraVo);
+        BeanUtils.copyProperties(cameraResult,cameraVo);
+        cameraVo.setPlayTime(playTime);
         return cameraVo;
+    }
+
+    /**
+     * 删除记录
+     *
+     * @param cameraId
+     */
+    @Transactional
+    @Modifying
+    public void delHistory(String cameraId) throws Exception
+    {
+        if(!cameraRepository.exists(cameraId))
+            throw new Exception("该摄像头不存在");
+        try
+        {
+            Camera camera = new Camera();
+            camera.setId(cameraId);
+            cameraHistoryRepository.deleteByCamera(camera);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.getMessage());
+        }
     }
 }
