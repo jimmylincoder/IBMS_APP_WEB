@@ -47,7 +47,7 @@ public class CameraManager
     {
         Page<Camera> cameraPage = null;
         Pageable pageable = new PageRequest(page - 1,PAGE_SIZE);
-        if(areaId == null || "".equals(""))
+        if(areaId == null || "".equals(areaId))
         {
             cameraPage = cameraRepository.findAll(pageable);
         }

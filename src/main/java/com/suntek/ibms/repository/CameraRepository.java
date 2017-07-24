@@ -21,6 +21,7 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @param orgCode  摄像机id
      * @return
      */
+    @Query("select camera from Camera camera where camera.orgCode like ?1%")
     Page<Camera> findByOrgCode(String orgCode, Pageable pageable);
 
     /**
