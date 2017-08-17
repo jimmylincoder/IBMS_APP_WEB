@@ -25,6 +25,12 @@ public class ResponseBody
         return this;
     }
 
+    public ResponseBody putAll(Map<String,Object> values)
+    {
+        content.putAll(values);
+        return this;
+    }
+
     public ResponseBody setStatus(int status)
     {
         response.setStatus(status);
