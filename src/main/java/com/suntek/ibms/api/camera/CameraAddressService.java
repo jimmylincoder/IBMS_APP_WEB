@@ -9,6 +9,8 @@ import com.suntek.ibms.manager.CameraControlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 
 /**
  * 获取视频播放地址
@@ -48,9 +50,10 @@ public class CameraAddressService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
+        Map<String,Object> res = cameraControlManager.play(deviceId, deviceIp, port, channel, user, password);
         return new ResponseBody()
                 //            .putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
-                .putData("address", cameraControlManager.play(deviceId, deviceIp, port, channel, user, password))
+                .putData("address", res.get("PlayUrl"))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

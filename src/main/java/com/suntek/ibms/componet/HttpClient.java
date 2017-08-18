@@ -29,9 +29,9 @@ public class HttpClient
 
     static
     {
-        client.setConnectTimeout(30, TimeUnit.SECONDS);
-        client.setReadTimeout(30, TimeUnit.SECONDS);
-        client.setWriteTimeout(30, TimeUnit.SECONDS);
+        client.setConnectTimeout(2, TimeUnit.SECONDS);
+        client.setReadTimeout(2, TimeUnit.SECONDS);
+        client.setWriteTimeout(2, TimeUnit.SECONDS);
     }
 
     public static void main(String[] args)
