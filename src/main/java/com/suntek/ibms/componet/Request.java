@@ -16,6 +16,10 @@ public class Request implements Serializable
     @JSONField(name = "os")
     private String os;
 
+    //服务名
+    @JSONField(name = "service")
+    private String serviceName;
+
     // 参数
     @JSONField(name = "params")
     private Map<String, Object> params;
@@ -38,5 +42,15 @@ public class Request implements Serializable
     public void setOs(String os)
     {
         this.os = os;
+    }
+
+    public void setServiceName(String serviceName)
+    {
+        this.serviceName = serviceName;
+    }
+
+    public String getServiceName()
+    {
+        return serviceName;
     }
 }

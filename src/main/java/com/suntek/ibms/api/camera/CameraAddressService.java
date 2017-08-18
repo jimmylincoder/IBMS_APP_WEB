@@ -50,10 +50,10 @@ public class CameraAddressService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String,Object> res = cameraControlManager.play(deviceId, deviceIp, port, channel, user, password);
+       // Map<String,Object> res = cameraControlManager.play(deviceId, deviceIp, port, channel, user, password);
         return new ResponseBody()
-                //            .putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
-                .putData("address", res.get("PlayUrl"))
+                .putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
+                //.putData("address", res.get("PlayUrl"))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

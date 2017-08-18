@@ -43,13 +43,11 @@ public class Entrance
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/{model}/{action}",
+    @RequestMapping(value = "/api",
             method = RequestMethod.POST,
             consumes = "application/json",
             produces = "application/json;charset=UTF-8")
-    public Response handle(HttpServletRequest httpServletRequest,
-                           @PathVariable String model,
-                           @PathVariable String action)
+    public Response handle(HttpServletRequest httpServletRequest)
     {
         Response response = new Response();
         try
@@ -62,7 +60,7 @@ public class Entrance
             Request request = JSON.parseObject(result, Request.class);
 
             //根据服务名获取对应的服务实现
-            ServiceHandler handler = mapping.get(model + "." + action);
+            ServiceHandler handler = mapping.get(request.getServiceName());
 
             //找不到服务
             if (handler == null)
