@@ -27,7 +27,7 @@ public class ResponseBody
 
     public ResponseBody putAll(Map<String,Object> values)
     {
-        content.putAll(values);
+        response.setContent(values);
         return this;
     }
 

@@ -1,4 +1,4 @@
-package com.suntek.ibms.api.camera;
+package com.suntek.ibms.api.camera.stream_server;
 
 import com.suntek.ibms.componet.Request;
 import com.suntek.ibms.componet.Response;
@@ -8,8 +8,6 @@ import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.manager.CameraControlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 
 /**

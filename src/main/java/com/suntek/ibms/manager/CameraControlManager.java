@@ -1,10 +1,9 @@
 package com.suntek.ibms.manager;
 
-import com.suntek.ibms.componet.HttpClient;
+
 import com.suntek.ibms.componet.MediaHttpEngine;
 import com.suntek.ibms.componet.MediaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -60,5 +59,73 @@ public class CameraControlManager
     {
         Map<String,Object> params = new HashMap<>();
         mediaHttpEngine.request("stopPlay",params);
+    }
+
+    /**
+     * 改变历史视频的播放速度
+     *
+     * @throws Exception
+     */
+    public void changeSpeed() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        mediaHttpEngine.request("changespeed",params);
+    }
+
+    /**
+     * 改变历史视频的播放位置
+     *
+     * @throws Exception
+     */
+    public void changePlayPosition() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        mediaHttpEngine.request("changeplayposition",params);
+    }
+
+    /**
+     * 暂停播放历史视频
+     *
+     * @throws Exception
+     */
+    public void pausePlay() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        mediaHttpEngine.request("pauseplay",params);
+    }
+
+    /**
+     * 恢复播放历史视频
+     *
+     * @throws Exception
+     */
+    public void resumePlay() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        mediaHttpEngine.request("resumeplay",params);
+    }
+
+
+    /**
+     * 查询录像
+     *
+     * @throws Exception
+     */
+    public void queryRecordFile() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        mediaHttpEngine.request("queryrecordfile",params);
+    }
+
+    /**
+     * 获取录像时间段
+     *
+     * @return
+     */
+    public Map<String,Object> record() throws Exception
+    {
+        Map<String,Object> params = new HashMap<>();
+        MediaResponse response = mediaHttpEngine.request("record",params);
+        return response.getContent();
     }
 }

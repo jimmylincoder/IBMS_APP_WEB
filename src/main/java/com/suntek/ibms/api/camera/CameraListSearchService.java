@@ -41,7 +41,7 @@ public class CameraListSearchService extends ServiceHandler
         Page<CameraVo> cameraVoPage = cameraManager.getCameraListByKeyword(keyword,Integer.parseInt(page));
         return new ResponseBody()
                 .putData("camera_list",cameraVoPage.getContent())
-                .putData("total_size",cameraVoPage.getTotalPages())
+                .putData("total_page",cameraVoPage.getTotalPages())
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

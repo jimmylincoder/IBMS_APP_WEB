@@ -1,4 +1,4 @@
-package com.suntek.ibms.api.camera;
+package com.suntek.ibms.api.camera.stream_server;
 
 import com.suntek.ibms.componet.Request;
 import com.suntek.ibms.componet.Response;
@@ -8,13 +8,15 @@ import com.suntek.ibms.manager.CameraControlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
- * 关闭视频流
+ * 录像时间段
  *
  * @author jimmy
  */
 @Component
-public class CameraStopService extends ServiceHandler
+public class CameraRecordService extends ServiceHandler
 {
     @Autowired
     CameraControlManager cameraControlManager;
@@ -22,14 +24,15 @@ public class CameraStopService extends ServiceHandler
     @Override
     public String supportServiceName()
     {
-        return "camera.stop";
+        return "camera.record";
     }
 
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.stop();
+        Map<String,Object> map = cameraControlManager.record();
         return new ResponseBody()
+                .putAll(map)
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }
