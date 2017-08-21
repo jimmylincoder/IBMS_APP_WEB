@@ -17,6 +17,8 @@ public class MediaResponse
 
     private String session;
 
+    private String requestId;
+
     private Map<String,Object> content;
 
     public int getStatusCode()
@@ -57,5 +59,15 @@ public class MediaResponse
     public void setContent(Map<String, Object> content)
     {
         this.content = content;
+    }
+
+    public void setRequestId(String requestId)
+    {
+        this.requestId = requestId;
+    }
+
+    public String getRequestId()
+    {
+        return requestId;
     }
 }

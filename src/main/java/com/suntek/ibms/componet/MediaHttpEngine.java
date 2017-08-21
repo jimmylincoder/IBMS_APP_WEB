@@ -1,10 +1,12 @@
 package com.suntek.ibms.componet;
 
+import com.suntek.ibms.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 视频后台服务engine
@@ -20,6 +22,8 @@ public class MediaHttpEngine
     @Value("${camera.server}")
     String cameraServerIp;
 
+    private AtomicInteger requestId = new AtomicInteger(0);
+
     /**
      * 视频后台请求
      *
@@ -30,11 +34,14 @@ public class MediaHttpEngine
     public MediaResponse request(String action, Map<String, Object> params) throws Exception
     {
         MediaResponse mediaResponse = new MediaResponse();
+        params.put("RequestID",generateRequestId());
+        LoggerUtil.info("请求" + cameraServerIp + "后台:" + params.toString());
         Map<String, Object> response = httpClient.postByXml(params,cameraServerIp +  action);
+        LoggerUtil.info("响应:" + response.toString());
         String statusCode = (String) response.get("StatusCode");
         String description = (String) response.get("Description");
         String session = (String) response.get("session");
-
+        String requestId = (String) response.get("RequestID");
 
         if (statusCode != null && !"".equals(statusCode))
         {
@@ -60,9 +67,25 @@ public class MediaHttpEngine
             mediaResponse.setSession(session);
             response.remove("session");
         }
+
+        if(requestId != null && !"".equals(requestId))
+        {
+            mediaResponse.setRequestId(requestId);
+            response.remove("RequestID");
+        }
         mediaResponse.setContent(response);
 
         return mediaResponse;
+    }
+
+    /**
+     * 自增requestId
+     *
+     * @return
+     */
+    private int generateRequestId()
+    {
+        return requestId.incrementAndGet();
     }
 
 }

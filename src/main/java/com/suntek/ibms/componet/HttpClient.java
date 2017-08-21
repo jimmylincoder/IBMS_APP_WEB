@@ -5,10 +5,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.dom4j.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -32,28 +29,6 @@ public class HttpClient
         client.setConnectTimeout(2, TimeUnit.SECONDS);
         client.setReadTimeout(2, TimeUnit.SECONDS);
         client.setWriteTimeout(2, TimeUnit.SECONDS);
-    }
-
-    public static void main(String[] args)
-    {
-        HttpClient httpClient = new HttpClient();
-        Map<String,Object> params = new HashMap<>();
-        params.put("DeviceID","44030100001310000002");
-        params.put("DeviceIP","172.16.16.111");
-        params.put("DevicePort","5060");
-        params.put("DeviceChn","33");
-        params.put("DeviceUser","admin");
-        params.put("DevicePass","suntek123");
-        params.put("BeginTime","");
-        params.put("EndTime","");
-        try
-        {
-            Map<String,Object> map = httpClient.postByXml(params,"http://192.168.1.112:8088/mobileservice/play");
-            System.out.print(map);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -84,22 +59,135 @@ public class HttpClient
      * @param xml
      * @return
      */
-    private  Map<String, Object> xmlToMap(String xml)
+    private Map<String, Object> xmlToMap(String xml)
     {
         Map<String, Object> map = new HashMap<String, Object>();
         try
         {
             Document document = DocumentHelper.parseText(xml);
             Element root = document.getRootElement();
-            Iterator<Element> it = root.elementIterator();
-            while (it.hasNext())
-            {
-                Element element = it.next();
-                map.put(element.getName(), element.getTextTrim());
-            }
+            map = xml2mapWithAttr(root);
         } catch (DocumentException e)
         {
             e.printStackTrace();
+        }
+        return map;
+    }
+
+    /**
+     * xml转map 带属性
+     *
+     * @param
+     * @return
+     */
+    private Map xml2mapWithAttr(Element element)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Element> list = element.elements();
+        List<Attribute> listAttr0 = element.attributes(); // 当前节点的所有属性的list
+        for (Attribute attr : listAttr0)
+        {
+            map.put("@" + attr.getName(), attr.getValue());
+        }
+        if (list.size() > 0)
+        {
+
+            for (int i = 0; i < list.size(); i++)
+            {
+                Element iter = list.get(i);
+                List mapList = new ArrayList();
+
+                if (iter.elements().size() > 0)
+                {
+                    Map m = xml2mapWithAttr(iter);
+                    if (map.get(iter.getName()) != null)
+                    {
+                        Object obj = map.get(iter.getName());
+                        if (!(obj instanceof List))
+                        {
+                            mapList = new ArrayList();
+                            mapList.add(obj);
+                            mapList.add(m);
+                        }
+                        if (obj instanceof List)
+                        {
+                            mapList = (List) obj;
+                            mapList.add(m);
+                        }
+                        map.put(iter.getName(), mapList);
+                    } else
+                        map.put(iter.getName(), m);
+                } else
+                {
+
+                    List<Attribute> listAttr = iter.attributes(); // 当前节点的所有属性的list
+                    Map<String, Object> attrMap = null;
+                    boolean hasAttributes = false;
+                    if (listAttr.size() > 0)
+                    {
+                        hasAttributes = true;
+                        attrMap = new LinkedHashMap<String, Object>();
+                        for (Attribute attr : listAttr)
+                        {
+                            attrMap.put("@" + attr.getName(), attr.getValue());
+                        }
+                    }
+
+                    if (map.get(iter.getName()) != null)
+                    {
+                        Object obj = map.get(iter.getName());
+                        if (!(obj instanceof List))
+                        {
+                            mapList = new ArrayList();
+                            mapList.add(obj);
+                            // mapList.add(iter.getText());
+                            if (hasAttributes)
+                            {
+                                attrMap.put("#text", iter.getText());
+                                mapList.add(attrMap);
+                            } else
+                            {
+                                mapList.add(iter.getText());
+                            }
+                        }
+                        if (obj instanceof List)
+                        {
+                            mapList = (List) obj;
+                            // mapList.add(iter.getText());
+                            if (hasAttributes)
+                            {
+                                attrMap.put("#text", iter.getText());
+                                mapList.add(attrMap);
+                            } else
+                            {
+                                mapList.add(iter.getText());
+                            }
+                        }
+                        map.put(iter.getName(), mapList);
+                    } else
+                    {
+                        // map.put(iter.getName(), iter.getText());
+                        if (hasAttributes)
+                        {
+                            attrMap.put("#text", iter.getText());
+                            map.put(iter.getName(), attrMap);
+                        } else
+                        {
+                            map.put(iter.getName(), iter.getText());
+                        }
+                    }
+                }
+            }
+        } else
+        {
+            // 根节点的
+            if (listAttr0.size() > 0)
+            {
+                map.put("#text", element.getText());
+            } else
+            {
+                map.put(element.getName(), element.getText());
+            }
         }
         return map;
     }

@@ -2,6 +2,7 @@ package com.suntek.ibms.componet;
 
 import com.alibaba.fastjson.JSON;
 import com.suntek.ibms.util.HttpUtil;
+import com.suntek.ibms.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Http请求入口
@@ -55,6 +57,7 @@ public class Entrance
             //获取数据字符数组
             byte[] content = HttpUtil.getRequestPostBytes(httpServletRequest);
             String result = new String(content,"UTF-8");
+            LoggerUtil.info("请求:" + result);
 
             //获取请求实体
             Request request = JSON.parseObject(result, Request.class);
@@ -73,9 +76,11 @@ public class Entrance
                 handler.handleParams(request.getParams());
                 //根据服务进行相应的操作
                 response = handler.handle(request);
+                LoggerUtil.info("响应:" + JSON.toJSONString(response));
             }
         }catch (Exception e)
         {
+            LoggerUtil.error("异常:" + e.getMessage());
             response.setErrorMessage(e.getMessage());
             response.setStatus(Response.STATUS_FAILURE);
         }
