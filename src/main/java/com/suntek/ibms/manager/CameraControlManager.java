@@ -46,7 +46,7 @@ public class CameraControlManager
      * @return
      * @throws Exception
      */
-    public Map<String, Object> play(String deviceId, String deviceIp,
+    public Map<String, Object> play(String deviceId, String parentId, String deviceIp,
                                     String channel, String user,
                                     String password, String beginTime,
                                     String endTime) throws Exception
@@ -57,6 +57,7 @@ public class CameraControlManager
 
         params.put("DeviceID", deviceId);
         params.put("DeviceIP", deviceIp);
+        params.put("ParentID", parentId);
         params.put("DevicePort", nvrPort);
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
@@ -64,8 +65,8 @@ public class CameraControlManager
         params.put("BeginTime", beginTime);
         params.put("EndTime", endTime);
         MediaResponse response = mediaHttpEngine.request("play", params);
-        Map<String,Object> res = response.getContent();
-        res.put("session",response.getSession());
+        Map<String, Object> res = response.getContent();
+        res.put("session", response.getSession());
 
         return res;
     }
@@ -88,11 +89,11 @@ public class CameraControlManager
      *
      * @throws Exception
      */
-    public void changeSpeed(String session,String speed) throws Exception
+    public void changeSpeed(String session, String speed) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         params.put("session", session);
-        params.put("Speed",speed);
+        params.put("Speed", speed);
         mediaHttpEngine.request("changespeed", params);
     }
 
@@ -140,9 +141,9 @@ public class CameraControlManager
      * @throws Exception
      */
     public List<RecordItem> queryRecordFile(String deviceId, String deviceIp,
-                                               String channel, String user,
-                                               String password, String beginTime,
-                                               String endTime) throws Exception
+                                            String channel, String user,
+                                            String password, String beginTime,
+                                            String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         params.put("DeviceID", deviceId);
@@ -155,8 +156,8 @@ public class CameraControlManager
         params.put("EndTime", timeStrToTStr(endTime));
         MediaResponse response = mediaHttpEngine.request("queryrecordfile", params);
         List<RecordItem> records = new ArrayList<>();
-        List<Map<String,Object>> items = (List<Map<String, Object>>) ((Map)response.getContent().get("RecordList")).get("Item");
-        for(Map item : items)
+        List<Map<String, Object>> items = (List<Map<String, Object>>) ((Map) response.getContent().get("RecordList")).get("Item");
+        for (Map item : items)
         {
             String id = (String) item.get("DeviceID");
             String startTime = (String) item.get("StartTime");
@@ -187,7 +188,7 @@ public class CameraControlManager
         String time = strs[1];
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date1 =  format.parse(date + " " + time);
+        Date date1 = format.parse(date + " " + time);
         return date1.getTime();
     }
 

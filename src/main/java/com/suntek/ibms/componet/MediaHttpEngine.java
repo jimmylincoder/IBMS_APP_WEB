@@ -35,9 +35,7 @@ public class MediaHttpEngine
     {
         MediaResponse mediaResponse = new MediaResponse();
         params.put("RequestID",generateRequestId());
-        LoggerUtil.info("请求" + cameraServerIp + "后台:" + params.toString());
         Map<String, Object> response = httpClient.postByXml(params,cameraServerIp +  action);
-        LoggerUtil.info("响应:" + response.toString());
         String statusCode = (String) response.get("StatusCode");
         String description = (String) response.get("Description");
         String session = (String) response.get("session");

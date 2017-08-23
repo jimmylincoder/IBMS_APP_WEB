@@ -16,6 +16,12 @@ public class CameraVo implements Serializable
     @JSONField(name = "name")
     private String name;
 
+    @JSONField(name = "device_id")
+    private String deviceId;
+
+    @JSONField(name = "parent_id")
+    private String parentId;
+
     @JSONField(name = "type")
     private String type;
 
@@ -42,6 +48,12 @@ public class CameraVo implements Serializable
 
     @JSONField(name = "play_time")
     private long playTime;
+
+    @JSONField(name = "org_name")
+    private String orgName;
+
+    @JSONField(name = "vendor_name")
+    private String vendorName;
 
     public String getId()
     {
@@ -151,5 +163,45 @@ public class CameraVo implements Serializable
     public void setPlayTime(long playTime)
     {
         this.playTime = playTime;
+    }
+
+    public void setDeviceId(String deviceId)
+    {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceId()
+    {
+        return deviceId;
+    }
+
+    public void setParentId(String parentId)
+    {
+        this.parentId = parentId;
+    }
+
+    public String getParentId()
+    {
+        return parentId;
+    }
+
+    public String getOrgName()
+    {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName)
+    {
+        this.orgName = orgName;
+    }
+
+    public void setVendorName(String vendorName)
+    {
+        this.vendorName = vendorName;
+    }
+
+    public String getVendorName()
+    {
+        return vendorName;
     }
 }

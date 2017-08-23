@@ -1,5 +1,6 @@
 package com.suntek.ibms.manager;
 
+import com.suntek.ibms.domain.Area;
 import com.suntek.ibms.domain.Camera;
 import com.suntek.ibms.domain.CameraHistory;
 import com.suntek.ibms.repository.CameraHistoryRepository;
@@ -62,6 +63,8 @@ public class CameraManager
             {
                 CameraVo cameraVo = new CameraVo();
                 BeanUtils.copyProperties(camera,cameraVo);
+                cameraVo.setOrgCode(camera.getArea().getOgrCode());
+                cameraVo.setOrgName(camera.getArea().getName());
                 return cameraVo;
             }
         });
@@ -84,6 +87,8 @@ public class CameraManager
             public CameraVo convert(Camera camera)
             {
                 CameraVo cameraVo = new CameraVo();
+                cameraVo.setOrgCode(camera.getArea().getOgrCode());
+                cameraVo.setOrgName(camera.getArea().getName());
                 BeanUtils.copyProperties(camera,cameraVo);
                 return cameraVo;
             }
@@ -104,6 +109,8 @@ public class CameraManager
         {
             CameraVo cameraVo = new CameraVo();
             BeanUtils.copyProperties(camera,cameraVo);
+            cameraVo.setOrgCode(camera.getArea().getOgrCode());
+            cameraVo.setOrgName(camera.getArea().getName());
             cameraVos.add(cameraVo);
         }
         return cameraVos;
@@ -122,6 +129,8 @@ public class CameraManager
         Camera camera = cameraRepository.findOne(cameraId);
         CameraVo cameraVo = new CameraVo();
         BeanUtils.copyProperties(camera,cameraVo);
+        cameraVo.setOrgCode(camera.getArea().getOgrCode());
+        cameraVo.setOrgName(camera.getArea().getName());
         return cameraVo;
     }
 
@@ -143,6 +152,8 @@ public class CameraManager
                 CameraVo cameraVo = new CameraVo();
                 BeanUtils.copyProperties(camera,cameraVo);
                 cameraVo.setPlayTime(cameraHistory.getPlayTime());
+                cameraVo.setOrgCode(camera.getArea().getOgrCode());
+                cameraVo.setOrgName(camera.getArea().getName());
                 return cameraVo;
             }
         });

@@ -24,6 +24,9 @@ public class CameraAddressService extends ServiceHandler
     @ParamField(name = "device_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备id不能为空")
     String deviceId;
 
+    @ParamField(name = "parent_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "nvr id不能为空")
+    String parentId;
+
     @ParamField(name = "device_ip",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备ip不能为空")
     String deviceIp;
 
@@ -54,11 +57,11 @@ public class CameraAddressService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String,Object> res = cameraControlManager.play(deviceId, deviceIp, channel, user, password,beginTime,endTime);
+        Map<String,Object> res = cameraControlManager.play(deviceId,parentId, deviceIp, channel, user, password,beginTime,endTime);
         return new ResponseBody()
-                .putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
+                //.putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
                 .putData("session",res.get("session"))
-                //.putData("address", res.get("PlayUrl"))
+                .putData("address", res.get("PlayUrl"))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

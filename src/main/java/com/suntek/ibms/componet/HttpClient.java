@@ -5,6 +5,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
+import com.suntek.ibms.util.LoggerUtil;
 import org.dom4j.*;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +27,9 @@ public class HttpClient
 
     static
     {
-        client.setConnectTimeout(2, TimeUnit.SECONDS);
-        client.setReadTimeout(2, TimeUnit.SECONDS);
-        client.setWriteTimeout(2, TimeUnit.SECONDS);
+        client.setConnectTimeout(5, TimeUnit.SECONDS);
+        client.setReadTimeout(5, TimeUnit.SECONDS);
+        client.setWriteTimeout(5, TimeUnit.SECONDS);
     }
 
     /**
@@ -42,13 +43,16 @@ public class HttpClient
     {
         Map<String, Object> response = new HashMap<>();
         String request = mapToXML(params);
+        LoggerUtil.info("请求" + url + "后台:" + request);
         com.squareup.okhttp.RequestBody body = RequestBody.create(XMLMTYPE, request);
         Request request1 = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
         Response response1 = client.newCall(request1).execute();
-        response = xmlToMap(response1.body().string());
+        String resStr = response1.body().string();
+        LoggerUtil.info("响应:" + resStr);
+        response = xmlToMap(resStr);
 
         return response;
     }

@@ -18,6 +18,12 @@ public class Camera
     @Column(name = "VIDEONAME")
     private String name;
 
+    @Column(name = "VIDEOFLAG")
+    private String deviceId;
+
+    @Column(name = "SERVERFLAG")
+    private String parentId;
+
     @Column(name = "BASETYPE")
     private String type;
 
@@ -27,8 +33,8 @@ public class Camera
     @Column(name = "SCHANNEL")
     private String channel;
 
-    @Column(name = "ORG_CODE")
-    private String orgCode;
+//    @Column(name = "ORG_CODE")
+//    private String orgCode;
 
     @Column(name = "SERVERIP")
     private String ip;
@@ -41,6 +47,16 @@ public class Camera
 
     @Column(name = "PASSWORD")
     private String password;
+
+    @Column(name = "VENDOR_NAME")
+    private String vendorName;
+
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = true)
+    @JoinColumn(name = "ORG_CODE",nullable = false)
+    private Area area;
+
+    @Column(name = "DELETE_STATUS")
+    private boolean delStatus;
 
     public String getId()
     {
@@ -92,14 +108,14 @@ public class Camera
         this.channel = channel;
     }
 
-    public String getOrgCode()
+    public void setArea(Area area)
     {
-        return orgCode;
+        this.area = area;
     }
 
-    public void setOrgCode(String orgCode)
+    public Area getArea()
     {
-        this.orgCode = orgCode;
+        return area;
     }
 
     public String getIp()
@@ -140,5 +156,45 @@ public class Camera
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public void setDeviceId(String deviceId)
+    {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceId()
+    {
+        return deviceId;
+    }
+
+    public void setParentId(String parentId)
+    {
+        this.parentId = parentId;
+    }
+
+    public String getParentId()
+    {
+        return parentId;
+    }
+
+    public void setVendorName(String vendorName)
+    {
+        this.vendorName = vendorName;
+    }
+
+    public String getVendorName()
+    {
+        return vendorName;
+    }
+
+    public void setDelStatus(boolean delStatus)
+    {
+        this.delStatus = delStatus;
+    }
+
+    public boolean isDelStatus()
+    {
+        return delStatus;
     }
 }
