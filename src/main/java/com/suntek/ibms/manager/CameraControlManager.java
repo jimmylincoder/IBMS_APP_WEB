@@ -81,7 +81,7 @@ public class CameraControlManager
     {
         Map<String, Object> params = new HashMap<>();
         params.put("session", session);
-        mediaHttpEngine.request("stopPlay", params);
+        mediaHttpEngine.request("stopplay", params);
     }
 
     /**
@@ -172,6 +172,15 @@ public class CameraControlManager
         }
 
         return records;
+    }
+
+    public Map<String, Object> queryProgress(String session) throws Exception
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("session", session);
+
+        MediaResponse response = mediaHttpEngine.request("queryplayprogress", map);
+        return response.getContent();
     }
 
     /**

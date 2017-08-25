@@ -7,6 +7,7 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.suntek.ibms.util.LoggerUtil;
 import org.dom4j.*;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @author jimmy
  */
 @Component
+@Scope(value = "prototype")
 public class HttpClient
 {
     //数据编码格式
@@ -27,9 +29,9 @@ public class HttpClient
 
     static
     {
-        client.setConnectTimeout(5, TimeUnit.SECONDS);
-        client.setReadTimeout(5, TimeUnit.SECONDS);
-        client.setWriteTimeout(5, TimeUnit.SECONDS);
+        client.setConnectTimeout(10, TimeUnit.SECONDS);
+        client.setReadTimeout(10, TimeUnit.SECONDS);
+        client.setWriteTimeout(10, TimeUnit.SECONDS);
     }
 
     /**
@@ -199,7 +201,7 @@ public class HttpClient
     private String mapToXML(Map map)
     {
         StringBuffer sb = new StringBuffer();
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Request>");
+        sb.append("<?xml version=\"1.0\" encoding=\"GB2312\"?><Request>");
         mapToXMLTest2(map, sb);
         sb.append("</Request>");
 
