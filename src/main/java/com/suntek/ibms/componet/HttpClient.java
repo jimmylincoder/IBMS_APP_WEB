@@ -7,10 +7,15 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.suntek.ibms.util.LoggerUtil;
 import org.dom4j.*;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +50,7 @@ public class HttpClient
     {
         Map<String, Object> response = new HashMap<>();
         String request = mapToXML(params);
-        LoggerUtil.info("请求" + url + "后台:" + request);
+        LoggerUtil.info(String.format("xml request->%s\n%s",url,formatXML(request)));
         com.squareup.okhttp.RequestBody body = RequestBody.create(XMLMTYPE, request);
         Request request1 = new Request.Builder()
                 .url(url)
@@ -53,7 +58,7 @@ public class HttpClient
                 .build();
         Response response1 = client.newCall(request1).execute();
         String resStr = response1.body().string();
-        LoggerUtil.info("响应:" + resStr);
+        LoggerUtil.info(String.format("xml response->%s\n%s",url,formatXML(resStr)));
         response = xmlToMap(resStr);
 
         return response;
@@ -244,5 +249,37 @@ public class HttpClient
             }
 
         }
+    }
+
+    public String formatXML(String inputXML) throws Exception
+    {
+        SAXReader reader = new SAXReader();
+        Document document = reader.read(new StringReader(inputXML));
+        String requestXML = null;
+        XMLWriter writer = null;
+        if (document != null)
+        {
+            try
+            {
+                StringWriter stringWriter = new StringWriter();
+                OutputFormat format = new OutputFormat(" ", true);
+                writer = new XMLWriter(stringWriter, format);
+                writer.write(document);
+                writer.flush();
+                requestXML = stringWriter.getBuffer().toString();
+            } finally
+            {
+                if (writer != null)
+                {
+                    try
+                    {
+                        writer.close();
+                    } catch (IOException e)
+                    {
+                    }
+                }
+            }
+        }
+        return requestXML;
     }
 }

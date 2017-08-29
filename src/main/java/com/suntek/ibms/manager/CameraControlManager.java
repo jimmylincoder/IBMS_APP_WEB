@@ -140,13 +140,14 @@ public class CameraControlManager
      *
      * @throws Exception
      */
-    public List<RecordItem> queryRecordFile(String deviceId, String deviceIp,
+    public List<RecordItem> queryRecordFile(String deviceId, String parentId, String deviceIp,
                                             String channel, String user,
                                             String password, String beginTime,
                                             String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         params.put("DeviceID", deviceId);
+        params.put("ParentID", parentId);
         params.put("DeviceIP", deviceIp);
         params.put("DevicePort", nvrPort);
         params.put("DeviceChn", channel);
@@ -170,7 +171,23 @@ public class CameraControlManager
 
             records.add(recordItem);
         }
+//        RecordItem recordItem = new RecordItem();
+//        RecordItem recordItem1 = new RecordItem();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date bt = format.parse("2017-08-28 08:30:00");
+//        Date et = format.parse("2017-08-28 09:30:00");
+//        recordItem.setStartTime(bt.getTime());
+//        recordItem.setEndTime(et.getTime());
+//        recordItem.setDeviceId("222222");
+//
+//        Date bt1 = format.parse("2017-08-28 08:00:00");
+//        Date et1 = format.parse("2017-08-28 08:20:00");
+//        recordItem1.setStartTime(bt1.getTime());
+//        recordItem1.setEndTime(et1.getTime());
+//        recordItem1.setDeviceId("222222");
 
+//        records.add(recordItem1);
+//        records.add(recordItem);
         return records;
     }
 

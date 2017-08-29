@@ -24,6 +24,9 @@ public class CameraQueryRecordService extends ServiceHandler
     @ParamField(name = "device_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备id不能为空")
     String deviceId;
 
+    @ParamField(name = "parent_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "nvr id不能为空")
+    String parentId;
+
     @ParamField(name = "device_ip",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备ip不能为空")
     String deviceIp;
 
@@ -48,13 +51,13 @@ public class CameraQueryRecordService extends ServiceHandler
     @Override
     public String supportServiceName()
     {
-        return "camera.query";
+        return "camera.query_record";
     }
 
     @Override
     public Response handle(Request request) throws Exception
     {
-        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId,deviceIp,channel,user,password,beginTime,endTime);
+        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId,parentId,deviceIp,channel,user,password,beginTime,endTime);
         return new ResponseBody()
                 .putData("records",recordFile)
                 .setStatus(Response.STATUS_SUCCESS)
