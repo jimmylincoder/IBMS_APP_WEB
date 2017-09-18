@@ -26,11 +26,13 @@ public class UserLoginTest
     public void testLoginSuccess()
     {
         Request request = new RequestBody()
+                .setSerivce("user.login")
+                .setUdid("11111")
                 .putParams("user_name","admin")
                 .putParams("password","suntek")
                 .build();
 
-        String body = testRestTemplate.postForObject("/api/user/login",request,String.class);
+        String body = testRestTemplate.postForObject("/api",request,String.class);
         System.out.println(body);
     }
 

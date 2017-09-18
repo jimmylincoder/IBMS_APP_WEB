@@ -61,8 +61,8 @@ public class Entrance
 
             //获取请求实体
             Request request = JSON.parseObject(result, Request.class);
-            LoggerUtil.info(String.format("request -> %s\n%s", request.getServiceName(),
-                    JsonFormatTool.formatJson(result)));
+            LoggerUtil.info(String.format("request -> %s  udid:%s\n%s", request.getServiceName(),
+                    request.getUdid(), JsonFormatTool.formatJson(result)));
 
             //根据服务名获取对应的服务实现
             ServiceHandler handler = mapping.get(request.getServiceName());
@@ -77,8 +77,8 @@ public class Entrance
                 handler.handleParams(request.getParams());
                 //根据服务进行相应的操作
                 response = handler.handle(request);
-                LoggerUtil.info(String.format("response -> %s\n%s", request.getServiceName(),
-                        JsonFormatTool.formatJson(JSON.toJSONString(response))));
+                LoggerUtil.info(String.format("response -> %s  udid:%s\n%s", request.getServiceName(),
+                        request.getUdid(), JsonFormatTool.formatJson(JSON.toJSONString(response))));
             }
         } catch (Exception e)
         {

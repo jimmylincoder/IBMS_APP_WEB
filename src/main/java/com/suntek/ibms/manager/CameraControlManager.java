@@ -58,7 +58,10 @@ public class CameraControlManager
         params.put("DeviceID", deviceId);
         params.put("DeviceIP", deviceIp);
         params.put("ParentID", parentId);
-        params.put("DevicePort", nvrPort);
+        if (deviceIp.equals("172.16.16.179"))
+            params.put("DevicePort", "5061");
+        else
+            params.put("DevicePort", nvrPort);
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
         params.put("DevicePass", password);
@@ -103,10 +106,11 @@ public class CameraControlManager
      * @param session
      * @throws Exception
      */
-    public void changePlayPosition(String session) throws Exception
+    public void changePlayPosition(String session, String position) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         params.put("session", session);
+        params.put("position", position);
         mediaHttpEngine.request("changeplayposition", params);
     }
 
@@ -149,7 +153,10 @@ public class CameraControlManager
         params.put("DeviceID", deviceId);
         params.put("ParentID", parentId);
         params.put("DeviceIP", deviceIp);
-        params.put("DevicePort", nvrPort);
+        if (deviceIp.equals("172.16.16.179"))
+            params.put("DevicePort", "5061");
+        else
+            params.put("DevicePort", nvrPort);
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
         params.put("DevicePass", password);

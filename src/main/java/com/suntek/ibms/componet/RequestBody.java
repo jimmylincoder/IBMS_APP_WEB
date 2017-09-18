@@ -15,6 +15,18 @@ public class RequestBody
 
     private Map<String,Object> params = new HashMap<>();
 
+    public RequestBody setSerivce(String service)
+    {
+        request.setServiceName(service);
+        return this;
+    }
+
+    public RequestBody setUdid(String udid)
+    {
+        request.setUdid(udid);
+        return this;
+    }
+
     public RequestBody putParams(String key,String value)
     {
         params.put(key,value);

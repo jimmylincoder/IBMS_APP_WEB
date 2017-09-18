@@ -20,6 +20,9 @@ public class Request implements Serializable
     @JSONField(name = "service")
     private String serviceName;
 
+    @JSONField(name = "udid")
+    private String udid;
+
     // 参数
     @JSONField(name = "params")
     private Map<String, Object> params;
@@ -52,5 +55,15 @@ public class Request implements Serializable
     public String getServiceName()
     {
         return serviceName;
+    }
+
+    public void setUdid(String udid)
+    {
+        this.udid = udid;
+    }
+
+    public String getUdid()
+    {
+        return udid;
     }
 }
