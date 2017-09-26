@@ -1,6 +1,7 @@
 package com.suntek.ibms.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 /**
@@ -22,8 +23,12 @@ public class CameraVo implements Serializable
     @JSONField(name = "parent_id")
     private String parentId;
 
+    // 1-球机  2-半球  3-固定枪机  3-遥控枪机
     @JSONField(name = "type")
     private String type;
+
+    @JSONField(name = "is_used")
+    private String isUsed;
 
     @JSONField(name = "place")
     private String place;
@@ -203,5 +208,15 @@ public class CameraVo implements Serializable
     public String getVendorName()
     {
         return vendorName;
+    }
+
+    public void setIsUsed(String isUsed)
+    {
+        this.isUsed = isUsed;
+    }
+
+    public String getIsUsed()
+    {
+        return isUsed;
     }
 }

@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author jimmy
  */
 @Entity
-@Table(name= "videopointinfo")
+@Table(name = "videopointinfo")
 public class Camera
 {
     @Id
@@ -24,8 +24,13 @@ public class Camera
     @Column(name = "SERVERFLAG")
     private String parentId;
 
+    // 1-球机  2-半球  3-固定枪机  3-遥控枪机
     @Column(name = "BASETYPE")
     private String type;
+
+    //摄像头状态标志  1-正常  0-不正常 -1-DVR错误  -2-图像异常
+    @Column(name = "ISUSED")
+    private String isUsed;
 
     @Column(name = "IPLACE")
     private String place;
@@ -52,7 +57,7 @@ public class Camera
     private String vendorName;
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = true)
-    @JoinColumn(name = "ORG_CODE",nullable = false)
+    @JoinColumn(name = "ORG_CODE", nullable = false)
     private Area area;
 
     @Column(name = "DELETE_STATUS")
@@ -196,5 +201,15 @@ public class Camera
     public boolean isDelStatus()
     {
         return delStatus;
+    }
+
+    public void setIsUsed(String isUsed)
+    {
+        this.isUsed = isUsed;
+    }
+
+    public String getIsUsed()
+    {
+        return isUsed;
     }
 }
