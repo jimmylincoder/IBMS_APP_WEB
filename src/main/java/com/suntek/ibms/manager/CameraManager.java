@@ -3,11 +3,15 @@ package com.suntek.ibms.manager;
 import com.suntek.ibms.domain.Area;
 import com.suntek.ibms.domain.Camera;
 import com.suntek.ibms.domain.CameraHistory;
+import com.suntek.ibms.domain.Preview;
 import com.suntek.ibms.repository.CameraHistoryRepository;
 import com.suntek.ibms.repository.CameraRepository;
+import com.suntek.ibms.repository.PreviewRepository;
+import com.suntek.ibms.util.Base64Img;
 import com.suntek.ibms.vo.CameraVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +20,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,28 +38,33 @@ public class CameraManager
     //每页页数
     private final int PAGE_SIZE = 15;
 
+    @Value("${preview.root_path}")
+    String previewRootPath;
+
     @Autowired
     CameraRepository cameraRepository;
 
     @Autowired
     CameraHistoryRepository cameraHistoryRepository;
 
+    @Autowired
+    PreviewRepository previewRepository;
+
     /**
      * 获取摄像机列表
      *
      * @return
      */
-    public Page<CameraVo> getCameraList(String areaId,int page)
+    public Page<CameraVo> getCameraList(String areaId, int page)
     {
         Page<Camera> cameraPage = null;
-        Pageable pageable = new PageRequest(page - 1,PAGE_SIZE);
-        if(areaId == null || "".equals(areaId))
+        Pageable pageable = new PageRequest(page - 1, PAGE_SIZE);
+        if (areaId == null || "".equals(areaId))
         {
             cameraPage = cameraRepository.findAll(pageable);
-        }
-        else if(areaId != null || !"".equals(areaId))
+        } else if (areaId != null || !"".equals(areaId))
         {
-            cameraPage = cameraRepository.findByOrgCode(areaId,pageable);
+            cameraPage = cameraRepository.findByOrgCode(areaId, pageable);
         }
         Page<CameraVo> cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
         {
@@ -62,7 +72,14 @@ public class CameraManager
             public CameraVo convert(Camera camera)
             {
                 CameraVo cameraVo = new CameraVo();
-                BeanUtils.copyProperties(camera,cameraVo);
+                BeanUtils.copyProperties(camera, cameraVo);
+                Preview preview = previewRepository.findByCameraId(camera.getId());
+                if (preview != null)
+                {
+                    String path = previewRootPath + preview.getPreviewPath();
+                    String photoBase64 = Base64Img.GetImageStrFromPath(path);
+                    cameraVo.setPhotoBase64(photoBase64);
+                }
                 cameraVo.setOrgCode(camera.getArea().getOgrCode());
                 cameraVo.setOrgName(camera.getArea().getName());
                 return cameraVo;
@@ -72,15 +89,15 @@ public class CameraManager
     }
 
     /**
-     *  通过关键字获取摄像机列表
+     * 通过关键字获取摄像机列表
      *
      * @param keyword
      * @param page
      * @return
      */
-    public Page<CameraVo> getCameraListByKeyword(String keyword,int page)
+    public Page<CameraVo> getCameraListByKeyword(String keyword, int page)
     {
-        Page<Camera> cameraPage = cameraRepository.findByNameLike(keyword,new PageRequest(page - 1,PAGE_SIZE));
+        Page<Camera> cameraPage = cameraRepository.findByNameLike(keyword, new PageRequest(page - 1, PAGE_SIZE));
         Page<CameraVo> cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
         {
             @Override
@@ -89,7 +106,7 @@ public class CameraManager
                 CameraVo cameraVo = new CameraVo();
                 cameraVo.setOrgCode(camera.getArea().getOgrCode());
                 cameraVo.setOrgName(camera.getArea().getName());
-                BeanUtils.copyProperties(camera,cameraVo);
+                BeanUtils.copyProperties(camera, cameraVo);
                 return cameraVo;
             }
         });
@@ -108,14 +125,13 @@ public class CameraManager
         for (Camera camera : cameras)
         {
             CameraVo cameraVo = new CameraVo();
-            BeanUtils.copyProperties(camera,cameraVo);
+            BeanUtils.copyProperties(camera, cameraVo);
             cameraVo.setOrgCode(camera.getArea().getOgrCode());
             cameraVo.setOrgName(camera.getArea().getName());
             cameraVos.add(cameraVo);
         }
         return cameraVos;
     }
-
 
 
     /**
@@ -128,7 +144,7 @@ public class CameraManager
     {
         Camera camera = cameraRepository.findOne(cameraId);
         CameraVo cameraVo = new CameraVo();
-        BeanUtils.copyProperties(camera,cameraVo);
+        BeanUtils.copyProperties(camera, cameraVo);
         cameraVo.setOrgCode(camera.getArea().getOgrCode());
         cameraVo.setOrgName(camera.getArea().getName());
         return cameraVo;
@@ -142,7 +158,7 @@ public class CameraManager
      */
     public Page<CameraVo> getHistory(int page)
     {
-        Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByOrderByPlayTimeDesc(new PageRequest(page -1,PAGE_SIZE));
+        Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByOrderByPlayTimeDesc(new PageRequest(page - 1, PAGE_SIZE));
         Page<CameraVo> cameraVoPage = cameraHistoryPage.map(new Converter<CameraHistory, CameraVo>()
         {
             @Override
@@ -150,14 +166,21 @@ public class CameraManager
             {
                 Camera camera = cameraHistory.getCamera();
                 CameraVo cameraVo = new CameraVo();
-                BeanUtils.copyProperties(camera,cameraVo);
+                Preview preview = previewRepository.findByCameraId(camera.getId());
+                if (preview != null)
+                {
+                    String path = previewRootPath + preview.getPreviewPath();
+                    String photoBase64 = Base64Img.GetImageStrFromPath(path);
+                    cameraVo.setPhotoBase64(photoBase64);
+                }
+                BeanUtils.copyProperties(camera, cameraVo);
                 cameraVo.setPlayTime(cameraHistory.getPlayTime());
                 cameraVo.setOrgCode(camera.getArea().getOgrCode());
                 cameraVo.setOrgName(camera.getArea().getName());
                 return cameraVo;
             }
         });
-        return  cameraVoPage;
+        return cameraVoPage;
     }
 
 
@@ -168,7 +191,7 @@ public class CameraManager
      */
     public CameraVo addHistory(String cameraId) throws Exception
     {
-        if(!cameraRepository.exists(cameraId))
+        if (!cameraRepository.exists(cameraId))
             throw new Exception("该摄像头不存在");
 
         //查询是否已存在该摄像头信息，不存在更插入，存在则更新时间
@@ -176,12 +199,12 @@ public class CameraManager
         camera.setId(cameraId);
         long playTime = new Date().getTime();
         CameraHistory cameraHistory = cameraHistoryRepository.findByCamera(camera);
-        if(cameraHistory == null)
+        if (cameraHistory == null)
         {
             cameraHistory = new CameraHistory();
             cameraHistory.setCamera(camera);
             cameraHistory.setPlayTime(playTime);
-        }else
+        } else
         {
             cameraHistory.setPlayTime(playTime);
         }
@@ -190,7 +213,7 @@ public class CameraManager
         //获取该摄像头信息
         Camera cameraResult = cameraRepository.findOne(cameraId);
         CameraVo cameraVo = new CameraVo();
-        BeanUtils.copyProperties(cameraResult,cameraVo);
+        BeanUtils.copyProperties(cameraResult, cameraVo);
         cameraVo.setPlayTime(playTime);
         return cameraVo;
     }
@@ -204,15 +227,14 @@ public class CameraManager
     @Modifying
     public void delHistory(String cameraId) throws Exception
     {
-        if(!cameraRepository.exists(cameraId))
+        if (!cameraRepository.exists(cameraId))
             throw new Exception("该摄像头不存在");
         try
         {
             Camera camera = new Camera();
             camera.setId(cameraId);
             cameraHistoryRepository.deleteByCamera(camera);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new Exception(e.getMessage());
         }

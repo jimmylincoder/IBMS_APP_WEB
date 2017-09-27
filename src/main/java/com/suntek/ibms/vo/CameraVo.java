@@ -60,6 +60,9 @@ public class CameraVo implements Serializable
     @JSONField(name = "vendor_name")
     private String vendorName;
 
+    @JSONField(name = "photo_base64")
+    private String photoBase64;
+
     public String getId()
     {
         return id;
@@ -218,5 +221,15 @@ public class CameraVo implements Serializable
     public String getIsUsed()
     {
         return isUsed;
+    }
+
+    public void setPhotoBase64(String photoBase64)
+    {
+        this.photoBase64 = photoBase64;
+    }
+
+    public String getPhotoBase64()
+    {
+        return photoBase64;
     }
 }
