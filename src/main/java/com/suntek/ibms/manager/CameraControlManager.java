@@ -46,10 +46,10 @@ public class CameraControlManager
      * @return
      * @throws Exception
      */
-    public Map<String, Object> play(String deviceId, String parentId, String deviceIp,
-                                    String channel, String user,
-                                    String password, String beginTime,
-                                    String endTime) throws Exception
+    public Map<String, Object> playByGB28181(String deviceId, String parentId, String deviceIp,
+                                             String channel, String user,
+                                             String password, String beginTime,
+                                             String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
@@ -67,6 +67,7 @@ public class CameraControlManager
         params.put("DevicePass", password);
         params.put("BeginTime", beginTime);
         params.put("EndTime", endTime);
+        params.put("Protocol", "GB28181");
         MediaResponse response = mediaHttpEngine.request("play", params);
         Map<String, Object> res = response.getContent();
         res.put("session", response.getSession());
@@ -235,5 +236,46 @@ public class CameraControlManager
     {
         String[] strs = str.split(" ");
         return strs[0] + "T" + strs[1];
+    }
+
+    /**
+     * 海康形式
+     *
+     * @param mediaChannel 手机端播放通道
+     * @param streamType   取流形式
+     * @param deviceIp     设备ip
+     * @param channel      通道号
+     * @param user         用户名
+     * @param password     密码
+     * @param beginTime    开始时间
+     * @param endTime      播放时间
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Object> playByHK(String mediaChannel, String streamType, String deviceIp,
+                                        String channel, String user, String password, String beginTime, String endTime) throws Exception
+    {
+        Map<String, Object> params = new HashMap<>();
+        beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
+        endTime = endTime == null ? "" : timeStrToTStr(endTime);
+
+        params.put("Protocol", "Hikvision");
+        params.put("DeviceIP", deviceIp);
+        params.put("MediaChannel", mediaChannel);
+        params.put("StreamType", streamType);
+        if (deviceIp.equals("172.16.16.179"))
+            params.put("DevicePort", "5061");
+        else
+            params.put("DevicePort", nvrPort);
+        params.put("DeviceChn", channel);
+        params.put("DeviceUser", user);
+        params.put("DevicePass", password);
+        params.put("BeginTime", beginTime);
+        params.put("EndTime", endTime);
+        MediaResponse response = mediaHttpEngine.request("play", params);
+        Map<String, Object> res = response.getContent();
+        res.put("session", response.getSession());
+
+        return res;
     }
 }

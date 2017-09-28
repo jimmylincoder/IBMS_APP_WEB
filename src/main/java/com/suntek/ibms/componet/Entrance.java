@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,11 +85,30 @@ public class Entrance
             }
         } catch (Exception e)
         {
-            LoggerUtil.error("异常:" + e.getMessage());
-            response.setErrorMessage(e.getMessage());
+            LoggerUtil.error("异常:" + getExceptionMessage(e));
+            response.setErrorMessage(getExceptionMessage(e));
             response.setStatus(Response.STATUS_FAILURE);
         }
 
         return response;
+    }
+
+    private String getExceptionMessage(Throwable ex)
+    {
+        StringBuffer sb = new StringBuffer();
+        //exception信息
+        Writer writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        ex.printStackTrace(printWriter);
+        Throwable cause = ex.getCause();
+        while (cause != null)
+        {
+            cause.printStackTrace(printWriter);
+            cause = cause.getCause();
+        }
+        printWriter.close();
+        String result = writer.toString();
+        sb.append(result);
+        return sb.toString();
     }
 }

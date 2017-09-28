@@ -77,8 +77,12 @@ public class CameraManager
                 if (preview != null)
                 {
                     String path = previewRootPath + preview.getPreviewPath();
-                    String photoBase64 = Base64Img.GetImageStrFromPath(path);
-                    cameraVo.setPhotoBase64(photoBase64);
+                    File file = new File(path);
+                    if (file.exists())
+                    {
+                        String photoBase64 = Base64Img.GetImageStrFromPath(path);
+                        cameraVo.setPhotoBase64(photoBase64);
+                    }
                 }
                 cameraVo.setOrgCode(camera.getArea().getOgrCode());
                 cameraVo.setOrgName(camera.getArea().getName());
@@ -170,8 +174,12 @@ public class CameraManager
                 if (preview != null)
                 {
                     String path = previewRootPath + preview.getPreviewPath();
-                    String photoBase64 = Base64Img.GetImageStrFromPath(path);
-                    cameraVo.setPhotoBase64(photoBase64);
+                    File file = new File(path);
+                    if (file.exists())
+                    {
+                        String photoBase64 = Base64Img.GetImageStrFromPath(path);
+                        cameraVo.setPhotoBase64(photoBase64);
+                    }
                 }
                 BeanUtils.copyProperties(camera, cameraVo);
                 cameraVo.setPlayTime(cameraHistory.getPlayTime());
