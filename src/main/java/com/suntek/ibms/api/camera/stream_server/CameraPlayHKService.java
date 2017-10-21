@@ -27,6 +27,9 @@ public class CameraPlayHKService extends ServiceHandler
     @Autowired
     CameraControlManager cameraControlManager;
 
+    @ParamField(name = "port", checkType = CheckType.NOT_NULL_AND_BLANK, message = "端口号不能为空")
+    String port;
+
     @ParamField(name = "media_channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "播放通道号")
     String mediaChannel;
 
@@ -61,7 +64,7 @@ public class CameraPlayHKService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String, Object> res = cameraControlManager.playByHK(mediaChannel, streamType, deviceIp, channel,
+        Map<String, Object> res = cameraControlManager.playByHK(mediaChannel, streamType, deviceIp, port, channel,
                 user, password, beginTime, endTime);
         return new ResponseBody()
                 //.putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")

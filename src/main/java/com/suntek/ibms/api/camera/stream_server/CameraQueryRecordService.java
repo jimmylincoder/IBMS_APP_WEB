@@ -45,6 +45,9 @@ public class CameraQueryRecordService extends ServiceHandler
     @ParamField(name = "end_time",checkType = CheckType.NOT_NULL_AND_BLANK,message = "录像结束时间不能为空")
     String endTime;
 
+    @ParamField(name = "protocol",checkType = CheckType.NOT_NULL_AND_BLANK,message = "协议不能为空")
+    String protocol;
+
     @Autowired
     CameraControlManager cameraControlManager;
 
@@ -57,7 +60,8 @@ public class CameraQueryRecordService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId,parentId,deviceIp,channel,user,password,beginTime,endTime);
+        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId,parentId,deviceIp,channel,user,
+                password,beginTime,endTime,protocol);
         return new ResponseBody()
                 .putData("records",recordFile)
                 .setStatus(Response.STATUS_SUCCESS)

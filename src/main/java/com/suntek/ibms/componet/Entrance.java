@@ -5,6 +5,7 @@ import com.suntek.ibms.util.HttpUtil;
 import com.suntek.ibms.util.JsonFormatTool;
 import com.suntek.ibms.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,9 @@ public class Entrance
     //已服务名为key保存接口
     private Map<String, ServiceHandler> mapping;
 
+    @Value("${log.is_log}")
+    private boolean isLog;
+
     /**
      * 把服务保存到map中,以服务名为key
      */
@@ -64,8 +68,9 @@ public class Entrance
 
             //获取请求实体
             Request request = JSON.parseObject(result, Request.class);
-            LoggerUtil.info(String.format("request -> %s  udid:%s\n%s", request.getServiceName(),
-                    request.getUdid(), JsonFormatTool.formatJson(result)));
+            if (isLog)
+                LoggerUtil.info(String.format("request -> %s  udid:%s\n%s", request.getServiceName(),
+                        request.getUdid(), JsonFormatTool.formatJson(result)));
 
             //根据服务名获取对应的服务实现
             ServiceHandler handler = mapping.get(request.getServiceName());
@@ -80,8 +85,9 @@ public class Entrance
                 handler.handleParams(request.getParams());
                 //根据服务进行相应的操作
                 response = handler.handle(request);
-                LoggerUtil.info(String.format("response -> %s  udid:%s\n%s", request.getServiceName(),
-                        request.getUdid(), JsonFormatTool.formatJson(JSON.toJSONString(response))));
+                if (isLog)
+                    LoggerUtil.info(String.format("response -> %s  udid:%s\n%s", request.getServiceName(),
+                            request.getUdid(), JsonFormatTool.formatJson(JSON.toJSONString(response))));
             }
         } catch (Exception e)
         {

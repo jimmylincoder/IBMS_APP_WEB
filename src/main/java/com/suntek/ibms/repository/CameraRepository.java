@@ -22,7 +22,7 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @param areaId  摄像机id
      * @return
      */
-    @Query("select camera from Camera camera where camera.area.id like ?1% and camera.delStatus = 0")
+    @Query("select camera from Camera camera where camera.area.id like ?1% and camera.delStatus = 0 Order by camera.isUsed")
     Page<Camera> findByOrgCode(String areaId, Pageable pageable);
 
     /**

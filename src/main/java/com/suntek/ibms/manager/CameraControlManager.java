@@ -148,21 +148,28 @@ public class CameraControlManager
     public List<RecordItem> queryRecordFile(String deviceId, String parentId, String deviceIp,
                                             String channel, String user,
                                             String password, String beginTime,
-                                            String endTime) throws Exception
+                                            String endTime, String protocol) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         params.put("DeviceID", deviceId);
         params.put("ParentID", parentId);
         params.put("DeviceIP", deviceIp);
-        if (deviceIp.equals("172.16.16.179"))
-            params.put("DevicePort", "5061");
-        else
-            params.put("DevicePort", nvrPort);
+        if ("GB28181".equals(protocol))
+        {
+            if (deviceIp.equals("172.16.16.179"))
+                params.put("DevicePort", "5061");
+            else
+                params.put("DevicePort", nvrPort);
+        } else if ("Hikvision".equals(protocol))
+        {
+            params.put("DevicePort",8000);
+        }
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
         params.put("DevicePass", password);
         params.put("BeginTime", timeStrToTStr(beginTime));
         params.put("EndTime", timeStrToTStr(endTime));
+        params.put("Protocol", protocol);
         MediaResponse response = mediaHttpEngine.request("queryrecordfile", params);
         List<RecordItem> records = new ArrayList<>();
         List<Map<String, Object>> items = (List<Map<String, Object>>) ((Map) response.getContent().get("RecordList")).get("Item");
@@ -252,7 +259,7 @@ public class CameraControlManager
      * @return
      * @throws Exception
      */
-    public Map<String, Object> playByHK(String mediaChannel, String streamType, String deviceIp,
+    public Map<String, Object> playByHK(String mediaChannel, String streamType, String deviceIp, String port,
                                         String channel, String user, String password, String beginTime, String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
@@ -263,10 +270,7 @@ public class CameraControlManager
         params.put("DeviceIP", deviceIp);
         params.put("MediaChannel", mediaChannel);
         params.put("StreamType", streamType);
-        if (deviceIp.equals("172.16.16.179"))
-            params.put("DevicePort", "5061");
-        else
-            params.put("DevicePort", nvrPort);
+        params.put("DevicePort", port);
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
         params.put("DevicePass", password);
