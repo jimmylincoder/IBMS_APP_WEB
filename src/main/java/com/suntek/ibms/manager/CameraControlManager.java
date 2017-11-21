@@ -3,6 +3,8 @@ package com.suntek.ibms.manager;
 
 import com.suntek.ibms.componet.MediaHttpEngine;
 import com.suntek.ibms.componet.MediaResponse;
+import com.suntek.ibms.domain.Camera;
+import com.suntek.ibms.repository.CameraRepository;
 import com.suntek.ibms.vo.RecordItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,9 @@ public class CameraControlManager
 {
     @Autowired
     MediaHttpEngine mediaHttpEngine;
+
+    @Autowired
+    CameraRepository cameraRepository;
 
     @Value("${camera.nvr_port}")
     String nvrPort;
@@ -280,6 +285,38 @@ public class CameraControlManager
         params.put("BeginTime", beginTime);
         params.put("EndTime", endTime);
         MediaResponse response = mediaHttpEngine.request("play", params);
+        Map<String, Object> res = response.getContent();
+        res.put("session", response.getSession());
+
+        return res;
+    }
+
+    /**
+     * 云台操作
+     *
+     * @param protocol
+     * @param videoId
+     * @param command
+     * @param speed
+     * @param stopFlag
+     */
+    public Map<String, Object> ptz(String protocol, String videoId, String command, String speed, String stopFlag) throws Exception
+    {
+        Camera camera = cameraRepository.findOne(videoId);
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("Protocol", protocol);
+        params.put("DeviceID", camera.getDeviceId());
+        params.put("DeviceIP", camera.getIp());
+        params.put("DevicePort", camera.getPort());
+        params.put("DeviceChn", camera.getChannel());
+        params.put("DeviceUser", camera.getUserName());
+        params.put("DevicePass", camera.getPassword());
+        params.put("Command", command);
+        params.put("Speed", speed);
+        params.put("StopFlag", stopFlag);
+
+        MediaResponse response = mediaHttpEngine.request("ptzcontrol", params);
         Map<String, Object> res = response.getContent();
         res.put("session", response.getSession());
 
