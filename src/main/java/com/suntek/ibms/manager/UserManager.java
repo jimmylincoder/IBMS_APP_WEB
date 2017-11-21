@@ -28,10 +28,10 @@ public class UserManager
     {
         List<User> users = userRepository.findAll();
         List<UserVo> userVos = new ArrayList<>();
-        for(User user : users)
+        for (User user : users)
         {
             UserVo userVo = new UserVo();
-            BeanUtils.copyProperties(user,userVo);
+            BeanUtils.copyProperties(user, userVo);
             userVos.add(userVo);
         }
         return userVos;
@@ -40,19 +40,41 @@ public class UserManager
     /**
      * 用户登录
      *
-     * @param userName  用户名
-     * @param password  密码
+     * @param userName 用户名
+     * @param password 密码
      * @return
      */
-    public UserVo login(String userName,String password)
+    public UserVo login(String userName, String password)
     {
         UserVo userVo = new UserVo();
         User user = userRepository.findByUserCodeAndPassword(userName, DESCrypt.md5(password));
-        if(user == null)
+        if (user == null)
         {
             return null;
         }
-        BeanUtils.copyProperties(user,userVo);
+        BeanUtils.copyProperties(user, userVo);
         return userVo;
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param userCode
+     * @param newPassword
+     * @param oldPassword
+     * @throws Exception
+     */
+    public void changePassword(String userCode, String newPassword, String oldPassword) throws Exception
+    {
+        User user = userRepository.findByUserCodeAndPassword(userCode, DESCrypt.md5(oldPassword));
+        if (newPassword.equals(oldPassword))
+        {
+            throw new Exception("旧密码和新密码一致");
+        }
+        if (user == null)
+        {
+            throw new Exception("旧密码输入不正确");
+        }
+        userRepository.updateUserPassword(userCode, DESCrypt.md5(newPassword));
     }
 }

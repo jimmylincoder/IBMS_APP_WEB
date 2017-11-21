@@ -50,7 +50,7 @@ public class HttpClient
     {
         Map<String, Object> response = new HashMap<>();
         String request = mapToXML(params);
-        LoggerUtil.info(String.format("xml request->%s\n%s",url,formatXML(request)));
+        LoggerUtil.info(String.format("xml request->%s\n%s", url, formatXML(request)));
         com.squareup.okhttp.RequestBody body = RequestBody.create(XMLMTYPE, request);
         Request request1 = new Request.Builder()
                 .url(url)
@@ -58,11 +58,24 @@ public class HttpClient
                 .build();
         Response response1 = client.newCall(request1).execute();
         String resStr = response1.body().string();
-        LoggerUtil.info(String.format("xml response->%s\n%s",url,formatXML(resStr)));
+        LoggerUtil.info(String.format("xml response->%s\n%s", url, formatXML(resStr)));
         response = xmlToMap(resStr);
 
         return response;
     }
+
+    public String postByJson(String name, String url) throws IOException
+    {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), name);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        Response response = client.newCall(request).execute();
+        String res = response.body().string();
+        return res;
+    }
+
 
     /**
      * xml转map

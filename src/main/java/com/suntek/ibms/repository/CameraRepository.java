@@ -1,6 +1,5 @@
 package com.suntek.ibms.repository;
 
-import com.suntek.ibms.domain.Area;
 import com.suntek.ibms.domain.Camera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +21,7 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @param areaId  摄像机id
      * @return
      */
-    @Query("select camera from Camera camera where camera.area.id like ?1% and camera.delStatus = 0 Order by camera.isUsed")
+    @Query("select camera from Camera camera where camera.area.id like ?1% and camera.delStatus = 0 Order by camera.isUsed desc")
     Page<Camera> findByOrgCode(String areaId, Pageable pageable);
 
     /**

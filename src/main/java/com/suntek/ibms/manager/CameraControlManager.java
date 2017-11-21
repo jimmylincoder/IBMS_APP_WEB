@@ -162,7 +162,7 @@ public class CameraControlManager
                 params.put("DevicePort", nvrPort);
         } else if ("Hikvision".equals(protocol))
         {
-            params.put("DevicePort",8000);
+            params.put("DevicePort", 8000);
         }
         params.put("DeviceChn", channel);
         params.put("DeviceUser", user);
@@ -173,18 +173,21 @@ public class CameraControlManager
         MediaResponse response = mediaHttpEngine.request("queryrecordfile", params);
         List<RecordItem> records = new ArrayList<>();
         List<Map<String, Object>> items = (List<Map<String, Object>>) ((Map) response.getContent().get("RecordList")).get("Item");
-        for (Map item : items)
+        if (items != null)
         {
-            String id = (String) item.get("DeviceID");
-            String startTime = (String) item.get("StartTime");
-            String endTime1 = (String) item.get("EndTime");
+            for (Map item : items)
+            {
+                String id = (String) item.get("DeviceID");
+                String startTime = (String) item.get("StartTime");
+                String endTime1 = (String) item.get("EndTime");
 
-            RecordItem recordItem = new RecordItem();
-            recordItem.setDeviceId(id);
-            recordItem.setStartTime(timeStrToLong(startTime));
-            recordItem.setEndTime(timeStrToLong(endTime1));
+                RecordItem recordItem = new RecordItem();
+                recordItem.setDeviceId(id);
+                recordItem.setStartTime(timeStrToLong(startTime));
+                recordItem.setEndTime(timeStrToLong(endTime1));
 
-            records.add(recordItem);
+                records.add(recordItem);
+            }
         }
 //        RecordItem recordItem = new RecordItem();
 //        RecordItem recordItem1 = new RecordItem();
