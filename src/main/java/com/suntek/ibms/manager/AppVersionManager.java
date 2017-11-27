@@ -18,6 +18,9 @@ public class AppVersionManager
     @Value("${app.download_address}")
     private String downloadAddress;
 
+    @Value("${app.update_content}")
+    private String updateContent;
+
     public VersionVo checkVersion(String version)
     {
         VersionVo versionVo = new VersionVo();
@@ -29,7 +32,7 @@ public class AppVersionManager
             versionVo.setIsUpdate("1");
             versionVo.setVersionNum(versionNum);
             versionVo.setDownloadAddress(downloadAddress);
-            versionVo.setUpdateContent("修改了部分bug");
+            versionVo.setUpdateContent(updateContent);
         }
         return versionVo;
     }
