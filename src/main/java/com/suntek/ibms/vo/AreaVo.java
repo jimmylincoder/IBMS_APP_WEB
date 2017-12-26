@@ -33,6 +33,10 @@ public class AreaVo implements Serializable
     @JSONField(name = "org_code")
     private String ogrCode;
 
+    //国际节点编码
+    @JSONField(name = "node_flag")
+    private String nodeFlag;
+
     public String getId()
     {
         return id;
@@ -81,5 +85,15 @@ public class AreaVo implements Serializable
     public void setOgrCode(String ogrCode)
     {
         this.ogrCode = ogrCode;
+    }
+
+    public String getNodeFlag()
+    {
+        return nodeFlag;
+    }
+
+    public void setNodeFlag(String nodeFlag)
+    {
+        this.nodeFlag = nodeFlag;
     }
 }

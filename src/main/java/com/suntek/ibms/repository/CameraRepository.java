@@ -46,4 +46,6 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @return
      */
     Page<Camera> findByIdIn(List<String> cameraId,Pageable pageable);
+
+    Camera findByDeviceId(String deviceId);
 }

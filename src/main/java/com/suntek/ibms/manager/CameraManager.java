@@ -1,12 +1,7 @@
 package com.suntek.ibms.manager;
 
-import com.suntek.ibms.domain.Area;
-import com.suntek.ibms.domain.Camera;
-import com.suntek.ibms.domain.CameraHistory;
-import com.suntek.ibms.domain.Preview;
-import com.suntek.ibms.repository.CameraHistoryRepository;
-import com.suntek.ibms.repository.CameraRepository;
-import com.suntek.ibms.repository.PreviewRepository;
+import com.suntek.ibms.domain.*;
+import com.suntek.ibms.repository.*;
 import com.suntek.ibms.util.Base64Img;
 import com.suntek.ibms.vo.CameraVo;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +45,12 @@ public class CameraManager
     @Autowired
     PreviewRepository previewRepository;
 
+    @Autowired
+    CameraAreaRelRepository cameraAreaRelRepository;
+
+    @Autowired
+    AreaRepository areaRepository;
+
     /**
      * 获取摄像机列表
      *
@@ -58,37 +59,46 @@ public class CameraManager
     public Page<CameraVo> getCameraList(String areaId, int page)
     {
         Page<Camera> cameraPage = null;
+        Page<CameraAreaRel> cameraAreaRelPage = null;
+        Page<CameraVo> cameraVoPage = null;
         Pageable pageable = new PageRequest(page - 1, PAGE_SIZE);
-        if (areaId == null || "".equals(areaId))
+        if (areaId == null || "".equals(areaId) || "01".equals(areaId))
         {
             cameraPage = cameraRepository.findAll(pageable);
+            cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
+            {
+                @Override
+                public CameraVo convert(Camera camera)
+                {
+                    CameraVo cameraVo = new CameraVo();
+                    BeanUtils.copyProperties(camera, cameraVo);
+                    cameraVo.setOrgCode(camera.getArea().getOgrCode());
+                    cameraVo.setOrgName(camera.getArea().getName());
+                    return cameraVo;
+                }
+            });
         } else if (areaId != null || !"".equals(areaId))
         {
-            cameraPage = cameraRepository.findByOrgCode(areaId, pageable);
-        }
-        Page<CameraVo> cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
-        {
-            @Override
-            public CameraVo convert(Camera camera)
+            Area area = areaRepository.findByOgrCode(areaId);
+            cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(area.getNodeFlag(),pageable);
+            cameraVoPage = cameraAreaRelPage.map(new Converter<CameraAreaRel, CameraVo>()
             {
-                CameraVo cameraVo = new CameraVo();
-                BeanUtils.copyProperties(camera, cameraVo);
-                Preview preview = previewRepository.findByCameraId(camera.getId());
-                if (preview != null)
+                @Override
+                public CameraVo convert(CameraAreaRel cameraAreaRel)
                 {
-                    String path = previewRootPath + preview.getPreviewPath();
-                    File file = new File(path);
-                    if (file.exists())
-                    {
-                        String photoBase64 = Base64Img.GetImageStrFromPath(path);
-                        cameraVo.setPhotoBase64(photoBase64);
-                    }
+                    CameraVo cameraVo = new CameraVo();
+                    String nodeFlag = cameraAreaRel.getStructureNodeFlag();
+                    String deviceFlag = cameraAreaRel.getDeviceFlag();
+                    Camera camera = cameraRepository.findByDeviceId(deviceFlag);
+                    Area area = areaRepository.findByNodeFlag(nodeFlag);
+                    BeanUtils.copyProperties(camera,cameraVo);
+                    cameraVo.setOrgCode(area.getOgrCode());
+                    cameraVo.setOrgName(area.getName());
+                    return cameraVo;
                 }
-                cameraVo.setOrgCode(camera.getArea().getOgrCode());
-                cameraVo.setOrgName(camera.getArea().getName());
-                return cameraVo;
-            }
-        });
+            });
+        }
+
         return cameraVoPage;
     }
 

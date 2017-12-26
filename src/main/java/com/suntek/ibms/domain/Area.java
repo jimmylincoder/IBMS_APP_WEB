@@ -35,6 +35,10 @@ public class Area
     @Column(name = "ORG_CODE")
     private String ogrCode;
 
+    //国际节点编码
+    @Column(name = "GB_NODE_FLAG")
+    private String nodeFlag;
+
     public String getId()
     {
         return id;
@@ -83,5 +87,15 @@ public class Area
     public void setOgrCode(String ogrCode)
     {
         this.ogrCode = ogrCode;
+    }
+
+    public String getNodeFlag()
+    {
+        return nodeFlag;
+    }
+
+    public void setNodeFlag(String nodeFlag)
+    {
+        this.nodeFlag = nodeFlag;
     }
 }
