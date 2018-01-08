@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -59,8 +60,9 @@ public class CameraManager
     public Page<CameraVo> getCameraList(String areaId, int page)
     {
         Page<Camera> cameraPage = null;
-        Page<CameraAreaRel> cameraAreaRelPage = null;
+        List<CameraAreaRel> cameraAreaRelPage = null;
         Page<CameraVo> cameraVoPage = null;
+        List<String> deviceIds = new ArrayList<>();
         Pageable pageable = new PageRequest(page - 1, PAGE_SIZE);
         if (areaId == null || "".equals(areaId) || "01".equals(areaId))
         {
@@ -80,23 +82,31 @@ public class CameraManager
         } else if (areaId != null || !"".equals(areaId))
         {
             Area area = areaRepository.findByOgrCode(areaId);
-            cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(area.getNodeFlag(),pageable);
-            cameraVoPage = cameraAreaRelPage.map(new Converter<CameraAreaRel, CameraVo>()
+            cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(area.getNodeFlag());
+            for(CameraAreaRel cameraAreaRel : cameraAreaRelPage)
             {
-                @Override
-                public CameraVo convert(CameraAreaRel cameraAreaRel)
+                deviceIds.add(cameraAreaRel.getDeviceFlag());
+            }
+            if(deviceIds.size() > 0)
+            {
+                cameraPage = cameraRepository.findByDeviceIdIn(deviceIds, pageable);
+                cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
                 {
-                    CameraVo cameraVo = new CameraVo();
-                    String nodeFlag = cameraAreaRel.getStructureNodeFlag();
-                    String deviceFlag = cameraAreaRel.getDeviceFlag();
-                    Camera camera = cameraRepository.findByDeviceId(deviceFlag);
-                    Area area = areaRepository.findByNodeFlag(nodeFlag);
-                    BeanUtils.copyProperties(camera,cameraVo);
-                    cameraVo.setOrgCode(area.getOgrCode());
-                    cameraVo.setOrgName(area.getName());
-                    return cameraVo;
-                }
-            });
+                    @Override
+                    public CameraVo convert(Camera camera)
+                    {
+                        CameraVo cameraVo = new CameraVo();
+                        BeanUtils.copyProperties(camera, cameraVo);
+                        cameraVo.setOrgCode(camera.getArea().getOgrCode());
+                        cameraVo.setOrgName(camera.getArea().getName());
+                        return cameraVo;
+                    }
+                });
+            }else
+            {
+                List<CameraVo> cameraVos = new ArrayList<>();
+                cameraVoPage = new PageImpl<CameraVo>(cameraVos);
+            }
         }
 
         return cameraVoPage;

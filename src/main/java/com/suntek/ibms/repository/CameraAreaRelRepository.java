@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  *  摄像机目录关联
  *
@@ -12,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface CameraAreaRelRepository extends JpaRepository<CameraAreaRel,String>
 {
-    Page<CameraAreaRel> findByStructureNodeFlag(String structureNodeFlag, Pageable pageable);
+    List<CameraAreaRel> findByStructureNodeFlag(String structureNodeFlag);
 }

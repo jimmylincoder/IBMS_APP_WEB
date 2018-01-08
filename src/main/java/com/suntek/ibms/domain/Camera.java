@@ -63,6 +63,9 @@ public class Camera
     @Column(name = "DELETE_STATUS")
     private boolean delStatus;
 
+    @Column(name = "APP_SHOW")
+    private Boolean appShow;
+
     public String getId()
     {
         return id;
@@ -211,5 +214,15 @@ public class Camera
     public String getIsUsed()
     {
         return isUsed;
+    }
+
+    public boolean isAppShow()
+    {
+        return appShow;
+    }
+
+    public void setAppShow(boolean appShow)
+    {
+        this.appShow = appShow;
     }
 }
