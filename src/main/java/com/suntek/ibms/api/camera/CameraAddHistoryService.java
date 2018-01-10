@@ -21,6 +21,9 @@ public class CameraAddHistoryService extends ServiceHandler
     @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
     String cameraId;
 
+    @ParamField(name = "user_code",checkType = CheckType.NOT_NULL_AND_BLANK,message = "用户代码不能为空")
+    String userCode;
+
     @Autowired
     CameraManager cameraManager;
 
@@ -34,7 +37,7 @@ public class CameraAddHistoryService extends ServiceHandler
     public Response handle(Request request) throws Exception
     {
         return new ResponseBody()
-                .putData("camera",cameraManager.addHistory(cameraId))
+                .putData("camera",cameraManager.addHistory(userCode,cameraId))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

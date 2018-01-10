@@ -29,6 +29,14 @@ public class CameraHistory
     @Column(name = "PLAY_TIME")
     private long playTime;
 
+    //用户代码
+    @Column(name = "USER_CODE")
+    private String userCode;
+
+    //播放次数
+    @Column(name = "PLAY_COUNT")
+    private int playCount;
+
     public String getId()
     {
         return id;
@@ -57,5 +65,25 @@ public class CameraHistory
     public void setPlayTime(long playTime)
     {
         this.playTime = playTime;
+    }
+
+    public String getUserCode()
+    {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode)
+    {
+        this.userCode = userCode;
+    }
+
+    public int getPlayCount()
+    {
+        return playCount;
+    }
+
+    public void setPlayCount(int playCount)
+    {
+        this.playCount = playCount;
     }
 }

@@ -17,8 +17,8 @@ public interface CameraHistoryRepository extends JpaRepository<CameraHistory,Str
     CameraHistory findByCamera(Camera camera);
 
     @Query("select cameraHistory from CameraHistory cameraHistory where cameraHistory.camera.delStatus = 0 " +
-            "and cameraHistory.camera.appShow = '1' order by cameraHistory.playTime DESC ")
-    Page<CameraHistory> findByOrderByPlayTimeDesc(Pageable pageable);
+            "and cameraHistory.camera.appShow = '1' and cameraHistory.userCode = ?1 order by cameraHistory.playTime DESC ")
+    Page<CameraHistory> findByUserCodeOrderByPlayTimeDesc(String userCode,Pageable pageable);
 
-    void deleteByCamera(Camera camera);
+    void deleteByCameraAndUserCode(Camera camera,String userCode);
 }

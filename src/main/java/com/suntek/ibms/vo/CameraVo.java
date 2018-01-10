@@ -63,6 +63,9 @@ public class CameraVo implements Serializable
     @JSONField(name = "photo_base64")
     private String photoBase64;
 
+    @JSONField(name = "play_count")
+    private String playCount;
+
     public String getId()
     {
         return id;
@@ -231,5 +234,15 @@ public class CameraVo implements Serializable
     public String getPhotoBase64()
     {
         return photoBase64;
+    }
+
+    public String getPlayCount()
+    {
+        return playCount;
+    }
+
+    public void setPlayCount(String playCount)
+    {
+        this.playCount = playCount;
     }
 }

@@ -44,13 +44,13 @@ public class CameraManager
     CameraHistoryRepository cameraHistoryRepository;
 
     @Autowired
-    PreviewRepository previewRepository;
-
-    @Autowired
     CameraAreaRelRepository cameraAreaRelRepository;
 
     @Autowired
     AreaRepository areaRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * 获取摄像机列表
@@ -180,9 +180,10 @@ public class CameraManager
      * @param page
      * @return
      */
-    public Page<CameraVo> getHistory(int page)
+    public Page<CameraVo> getHistory(String userCode,int page)
     {
-        Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByOrderByPlayTimeDesc(new PageRequest(page - 1, PAGE_SIZE));
+        Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByUserCodeOrderByPlayTimeDesc(userCode,
+                new PageRequest(page - 1, PAGE_SIZE));
         Page<CameraVo> cameraVoPage = cameraHistoryPage.map(new Converter<CameraHistory, CameraVo>()
         {
             @Override
@@ -190,21 +191,11 @@ public class CameraManager
             {
                 Camera camera = cameraHistory.getCamera();
                 CameraVo cameraVo = new CameraVo();
-                Preview preview = previewRepository.findByCameraId(camera.getId());
-                if (preview != null)
-                {
-                    String path = previewRootPath + preview.getPreviewPath();
-                    File file = new File(path);
-                    if (file.exists())
-                    {
-                        String photoBase64 = Base64Img.GetImageStrFromPath(path);
-                        cameraVo.setPhotoBase64(photoBase64);
-                    }
-                }
                 BeanUtils.copyProperties(camera, cameraVo);
                 cameraVo.setPlayTime(cameraHistory.getPlayTime());
                 cameraVo.setOrgCode(camera.getArea().getOgrCode());
                 cameraVo.setOrgName(camera.getArea().getName());
+                cameraVo.setPlayCount(cameraHistory.getPlayCount() + "");
                 return cameraVo;
             }
         });
@@ -217,10 +208,13 @@ public class CameraManager
      *
      * @return
      */
-    public CameraVo addHistory(String cameraId) throws Exception
+    public CameraVo addHistory(String userCode,String cameraId) throws Exception
     {
         if (!cameraRepository.exists(cameraId))
             throw new Exception("该摄像头不存在");
+
+        if(!userRepository.exists(userCode))
+            throw new Exception("该用户不存在");
 
         //查询是否已存在该摄像头信息，不存在更插入，存在则更新时间
         Camera camera = new Camera();
@@ -232,9 +226,12 @@ public class CameraManager
             cameraHistory = new CameraHistory();
             cameraHistory.setCamera(camera);
             cameraHistory.setPlayTime(playTime);
+            cameraHistory.setUserCode(userCode);
         } else
         {
             cameraHistory.setPlayTime(playTime);
+            int count = cameraHistory.getPlayCount();
+            cameraHistory.setPlayCount(++count);
         }
         cameraHistoryRepository.save(cameraHistory);
 
@@ -253,15 +250,18 @@ public class CameraManager
      */
     @Transactional
     @Modifying
-    public void delHistory(String cameraId) throws Exception
+    public void delHistory(String userCode,String cameraId) throws Exception
     {
         if (!cameraRepository.exists(cameraId))
             throw new Exception("该摄像头不存在");
+
+        if(!userRepository.exists(userCode))
+            throw new Exception("该用户不存在");
         try
         {
             Camera camera = new Camera();
             camera.setId(cameraId);
-            cameraHistoryRepository.deleteByCamera(camera);
+            cameraHistoryRepository.deleteByCameraAndUserCode(camera,userCode);
         } catch (Exception e)
         {
             throw new Exception(e.getMessage());
