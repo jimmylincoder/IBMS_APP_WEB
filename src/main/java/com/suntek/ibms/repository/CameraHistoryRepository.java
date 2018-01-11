@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface CameraHistoryRepository extends JpaRepository<CameraHistory,String>
 {
-    CameraHistory findByCamera(Camera camera);
+    CameraHistory findByCameraAndUserCode(Camera camera,String userCode);
 
     @Query("select cameraHistory from CameraHistory cameraHistory where cameraHistory.camera.delStatus = 0 " +
             "and cameraHistory.camera.appShow = '1' and cameraHistory.userCode = ?1 order by cameraHistory.playTime DESC ")

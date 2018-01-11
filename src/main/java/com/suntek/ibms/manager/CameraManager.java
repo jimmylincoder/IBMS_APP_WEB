@@ -220,13 +220,14 @@ public class CameraManager
         Camera camera = new Camera();
         camera.setId(cameraId);
         long playTime = new Date().getTime();
-        CameraHistory cameraHistory = cameraHistoryRepository.findByCamera(camera);
+        CameraHistory cameraHistory = cameraHistoryRepository.findByCameraAndUserCode(camera,userCode);
         if (cameraHistory == null)
         {
             cameraHistory = new CameraHistory();
             cameraHistory.setCamera(camera);
             cameraHistory.setPlayTime(playTime);
             cameraHistory.setUserCode(userCode);
+            cameraHistory.setPlayCount(1);
         } else
         {
             cameraHistory.setPlayTime(playTime);
