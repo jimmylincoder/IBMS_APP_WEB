@@ -58,4 +58,17 @@ public class AreaManager
         }
         return areaVos;
     }
+
+    /**
+     * 获取根结点
+     *
+     * @return 根结点
+     */
+    public AreaVo getRootArea()
+    {
+        Area area = areaRepository.findOne("1");
+        AreaVo areaVo = new AreaVo();
+        BeanUtils.copyProperties(area,areaVo);
+        return areaVo;
+    }
 }
