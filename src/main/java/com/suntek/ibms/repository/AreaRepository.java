@@ -29,4 +29,6 @@ public interface AreaRepository extends JpaRepository<Area,String>
     Area findByOgrCode(String orgCode);
 
     Area findByNodeFlag(String nodeFlag);
+
+    List<Area> findByNodeLevel(String level);
 }

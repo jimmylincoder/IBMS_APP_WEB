@@ -68,7 +68,26 @@ public class AreaManager
     {
         Area area = areaRepository.findOne("1");
         AreaVo areaVo = new AreaVo();
-        BeanUtils.copyProperties(area,areaVo);
+        BeanUtils.copyProperties(area, areaVo);
         return areaVo;
+    }
+
+    /**
+     * 根据等级获取区域列表
+     *
+     * @param level
+     * @return
+     */
+    public List<AreaVo> getAreaListByLevel(String level)
+    {
+        List<AreaVo> areaVos = new ArrayList<>();
+        List<Area> areas = areaRepository.findByNodeLevel(level);
+        for (Area area : areas)
+        {
+            AreaVo areaVo = new AreaVo();
+            BeanUtils.copyProperties(area, areaVo);
+            areaVos.add(areaVo);
+        }
+        return areaVos;
     }
 }
