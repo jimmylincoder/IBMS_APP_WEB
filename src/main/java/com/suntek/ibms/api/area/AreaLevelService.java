@@ -8,12 +8,14 @@ import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.manager.AreaManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 根据等级获取区域
  *
  * @author jimmy
  */
+@Component
 public class AreaLevelService extends ServiceHandler
 {
     @Autowired
