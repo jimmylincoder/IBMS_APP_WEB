@@ -2,6 +2,10 @@ package com.suntek.ibms.componet;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.suntek.ibms.exception.CameraException;
+import com.suntek.ibms.exception.MediaException;
+import com.suntek.ibms.exception.UserException;
+import com.suntek.ibms.exception.ValidateException;
 import com.suntek.ibms.util.HttpUtil;
 import com.suntek.ibms.util.JsonFormatTool;
 import com.suntek.ibms.util.LoggerUtil;
@@ -69,10 +73,9 @@ public class Entrance
     public byte[] handle(HttpServletRequest httpServletRequest) throws UnsupportedEncodingException
     {
         Response response = new Response();
-
+        Request request = null;
         //返回字符串
         byte[] data = null;
-        String responseStr;
         try
         {
             //获取数据字符数组
@@ -80,17 +83,14 @@ public class Entrance
             String result;
             //判断是否开启加密
             if (IS_ENCRYPOTOR)
-            {
                 //解密数据
                 result = new String(encryptor.decode(content, ASE_KEY), "UTF-8");
-            }
             else
-            {
                 //不解密数据
                 result = new String(content, "UTF-8");
-            }
+
             //获取请求实体
-            Request request = JSON.parseObject(result, Request.class);
+            request = JSON.parseObject(result, Request.class);
             //是否打印日志
             if (isLog)
                 LoggerUtil.info(String.format("request -> %s  udid:%s\n%s", request.getServiceName(),
@@ -109,41 +109,54 @@ public class Entrance
                 handler.handleParams(request.getParams());
                 //根据服务进行相应的操作
                 response = handler.handle(request);
-                if (isLog)
-                    LoggerUtil.info(String.format("response -> %s  udid:%s\n%s", request.getServiceName(),
-                            request.getUdid(), JsonFormatTool.formatJson(JSON.toJSONString(response))));
-            }
-
-            //返回数据
-            if (IS_ENCRYPOTOR)
-            {
-                //加密数据
-                data = encryptor.encode(JSON.toJSONString(
-                        response, SerializerFeature.WriteMapNullValue).getBytes(),
-                        ASE_KEY
-                );
-            }
-            else
-            {
-                data = JSON.toJSONString(response, SerializerFeature.WriteMapNullValue).getBytes();
             }
         } catch (Exception e)
         {
-            LoggerUtil.error("异常:" + getExceptionMessage(e));
-            response.setErrorMessage(getExceptionMessage(e));
-            response.setStatus(Response.STATUS_FAILURE);
-            data = JSON.toJSONString(response, SerializerFeature.WriteMapNullValue).getBytes();
-
-            if (IS_ENCRYPOTOR)
-            {
-                data = new String(encryptor.encode(data, ASE_KEY)).getBytes();
-            }
+            response = makeResponseByException(response, e);
         }
+        if (isLog)
+            LoggerUtil.info(String.format("response -> %s  udid:%s\n%s", request.getServiceName(),
+                    request.getUdid(), JsonFormatTool.formatJson(JSON.toJSONString(response))));
+        //返回数据
+        if (IS_ENCRYPOTOR)
+            //加密数据
+            data = encryptor.encode(JSON.toJSONString(response).getBytes(), ASE_KEY);
+        else
+            data = JSON.toJSONString(response).getBytes();
 
         return data;
     }
 
+    /**
+     * 根据不同异常返回异常信息
+     *
+     * @param response
+     * @param e
+     * @return
+     */
+    private Response makeResponseByException(Response response, Exception e)
+    {
+        if (e instanceof ValidateException || e instanceof UserException ||
+                e instanceof MediaException || e instanceof CameraException)
+        {
+            response.setErrorMessage(e.getMessage());
+            response.setStatus(Response.STATUS_FAILURE);
+        } else
+        {
+            LoggerUtil.error("异常:" + getExceptionMessage(e));
+            response.setErrorMessage(getExceptionMessage(e));
+            response.setStatus(Response.STATUS_FAILURE);
+        }
+        return response;
+    }
 
+
+    /**
+     * 打印异常栈
+     *
+     * @param ex
+     * @return
+     */
     private String getExceptionMessage(Throwable ex)
     {
         StringBuffer sb = new StringBuffer();

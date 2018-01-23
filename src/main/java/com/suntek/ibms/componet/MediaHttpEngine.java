@@ -1,5 +1,6 @@
 package com.suntek.ibms.componet;
 
+import com.suntek.ibms.exception.MediaException;
 import com.suntek.ibms.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,12 +41,11 @@ public class MediaHttpEngine
         String description = (String) response.get("Description");
         String session = (String) response.get("session");
         String requestId = (String) response.get("RequestID");
-
         if (statusCode != null && !"".equals(statusCode))
         {
             if (!"0".equals(statusCode))
             {
-                throw new Exception("视频服务返回错误码:" + statusCode
+                throw new MediaException("视频服务返回错误码:" + statusCode
                         + "\n错误描述:" + description
                         + "\nsession:" + session);
             }

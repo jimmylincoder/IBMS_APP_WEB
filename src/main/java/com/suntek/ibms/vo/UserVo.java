@@ -17,10 +17,10 @@ public class UserVo implements Serializable
     @JSONField(name = "user_name")
     private String userName;
 
-    @JSONField(name = "deptCode")
+    @JSONField(name = "dept_code")
     private String deptCode;
 
-    @JSONField(name = "deptName")
+    @JSONField(name = "dept_name")
     private String deptName;
 
     public String getUserCode()

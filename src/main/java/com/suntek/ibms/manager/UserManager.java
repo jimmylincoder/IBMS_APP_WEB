@@ -2,6 +2,7 @@ package com.suntek.ibms.manager;
 
 import com.suntek.ibms.domain.Area;
 import com.suntek.ibms.domain.User;
+import com.suntek.ibms.exception.UserException;
 import com.suntek.ibms.repository.AreaRepository;
 import com.suntek.ibms.repository.UserRepository;
 import com.suntek.ibms.util.DESCrypt;
@@ -72,16 +73,16 @@ public class UserManager
      * @param oldPassword
      * @throws Exception
      */
-    public void changePassword(String userCode, String newPassword, String oldPassword) throws Exception
+    public void changePassword(String userCode, String newPassword, String oldPassword) throws UserException
     {
         User user = userRepository.findByUserCodeAndPassword(userCode, DESCrypt.md5(oldPassword));
         if (newPassword.equals(oldPassword))
         {
-            throw new Exception("旧密码和新密码一致");
+            throw new UserException("旧密码和新密码一致");
         }
         if (user == null)
         {
-            throw new Exception("旧密码输入不正确");
+            throw new UserException("旧密码输入不正确");
         }
         userRepository.updateUserPassword(userCode, DESCrypt.md5(newPassword));
     }

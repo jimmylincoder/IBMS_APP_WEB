@@ -30,7 +30,7 @@ public class CameraInfoService extends ServiceHandler
     @Override
     public String supportServiceName()
     {
-        return "camera.getCameraInfo";
+        return "camera.info";
     }
 
     @Override

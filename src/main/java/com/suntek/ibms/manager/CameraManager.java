@@ -1,6 +1,7 @@
 package com.suntek.ibms.manager;
 
 import com.suntek.ibms.domain.*;
+import com.suntek.ibms.exception.CameraException;
 import com.suntek.ibms.repository.*;
 import com.suntek.ibms.util.Base64Img;
 import com.suntek.ibms.vo.CameraVo;
@@ -83,11 +84,11 @@ public class CameraManager
         {
             Area area = areaRepository.findByOgrCode(areaId);
             cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(area.getNodeFlag());
-            for(CameraAreaRel cameraAreaRel : cameraAreaRelPage)
+            for (CameraAreaRel cameraAreaRel : cameraAreaRelPage)
             {
                 deviceIds.add(cameraAreaRel.getDeviceFlag());
             }
-            if(deviceIds.size() > 0)
+            if (deviceIds.size() > 0)
             {
                 cameraPage = cameraRepository.findByDeviceIdIn(deviceIds, pageable);
                 cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
@@ -102,7 +103,7 @@ public class CameraManager
                         return cameraVo;
                     }
                 });
-            }else
+            } else
             {
                 List<CameraVo> cameraVos = new ArrayList<>();
                 cameraVoPage = new PageImpl<CameraVo>(cameraVos);
@@ -180,7 +181,7 @@ public class CameraManager
      * @param page
      * @return
      */
-    public Page<CameraVo> getHistory(String userCode,int page)
+    public Page<CameraVo> getHistory(String userCode, int page)
     {
         Page<CameraHistory> cameraHistoryPage = cameraHistoryRepository.findByUserCodeOrderByPlayTimeDesc(userCode,
                 new PageRequest(page - 1, PAGE_SIZE));
@@ -208,19 +209,19 @@ public class CameraManager
      *
      * @return
      */
-    public CameraVo addHistory(String userCode,String cameraId) throws Exception
+    public CameraVo addHistory(String userCode, String cameraId) throws CameraException
     {
         if (!cameraRepository.exists(cameraId))
-            throw new Exception("该摄像头不存在");
+            throw new CameraException("该摄像头不存在");
 
-        if(!userRepository.exists(userCode))
-            throw new Exception("该用户不存在");
+        if (!userRepository.exists(userCode))
+            throw new CameraException("该用户不存在");
 
         //查询是否已存在该摄像头信息，不存在更插入，存在则更新时间
         Camera camera = new Camera();
         camera.setId(cameraId);
         long playTime = new Date().getTime();
-        CameraHistory cameraHistory = cameraHistoryRepository.findByCameraAndUserCode(camera,userCode);
+        CameraHistory cameraHistory = cameraHistoryRepository.findByCameraAndUserCode(camera, userCode);
         if (cameraHistory == null)
         {
             cameraHistory = new CameraHistory();
@@ -251,21 +252,16 @@ public class CameraManager
      */
     @Transactional
     @Modifying
-    public void delHistory(String userCode,String cameraId) throws Exception
+    public void delHistory(String userCode, String cameraId) throws CameraException
     {
         if (!cameraRepository.exists(cameraId))
-            throw new Exception("该摄像头不存在");
+            throw new CameraException("该摄像头不存在");
 
-        if(!userRepository.exists(userCode))
-            throw new Exception("该用户不存在");
-        try
-        {
-            Camera camera = new Camera();
-            camera.setId(cameraId);
-            cameraHistoryRepository.deleteByCameraAndUserCode(camera,userCode);
-        } catch (Exception e)
-        {
-            throw new Exception(e.getMessage());
-        }
+        if (!userRepository.exists(userCode))
+            throw new CameraException("该用户不存在");
+        Camera camera = new Camera();
+        camera.setId(cameraId);
+        cameraHistoryRepository.deleteByCameraAndUserCode(camera, userCode);
+
     }
 }

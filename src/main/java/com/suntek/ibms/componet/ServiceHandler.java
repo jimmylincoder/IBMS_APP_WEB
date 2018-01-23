@@ -2,6 +2,7 @@ package com.suntek.ibms.componet;
 
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
+import com.suntek.ibms.exception.ValidateException;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -32,37 +33,65 @@ public abstract class ServiceHandler
      */
     public void handleParams(Map<String, Object> params) throws Exception
     {
-
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field : fields)
         {
-            boolean fieldHasAnno = field.isAnnotationPresent(ParamField.class);
-            if (fieldHasAnno)
+            validateParams(params, field);
+        }
+    }
+
+    /**
+     * 校验各个参数
+     *
+     * @param params
+     * @param field
+     * @throws Exception
+     */
+    private void validateParams(Map<String, Object> params, Field field) throws ValidateException
+    {
+        boolean fieldHasAnno = field.isAnnotationPresent(ParamField.class);
+        if (fieldHasAnno)
+        {
+            field.setAccessible(true);
+            ParamField paramField = field.getAnnotation(ParamField.class);
+            String name = paramField.name();
+            String value = (String) params.get(name);
+            ThreadLocal<String> valueLocal = new ThreadLocal<>();
+            valueLocal.set(value);
+            try
             {
-                field.setAccessible(true);
-                ParamField paramField = field.getAnnotation(ParamField.class);
-                String name = paramField.name();
-                String value = (String) params.get(name);
-                ThreadLocal<String> valueLocal = new ThreadLocal<>();
-                valueLocal.set(value);
                 field.set(this, valueLocal);
-                CheckType[] checkTypes = paramField.checkType();
-                String[] messages = paramField.message();
-                if(checkTypes.length > 0)
-                {
-                    for (CheckType checkType : checkTypes)
-                    {
-                        if(CheckType.NOT_NULL_AND_BLANK.equals(checkType))
-                        {
-                            if(value == null || "".equals(value))
-                            {
-                                throw new Exception(messages[0]);
-                            }
-                        }
-                    }
-                }
+            } catch (IllegalAccessException e)
+            {
+                throw new ValidateException(e.getMessage());
+            }
+            CheckType[] checkTypes = paramField.checkType();
+            String[] messages = paramField.message();
+            if (checkTypes.length < 0)
+                return;
+            for (CheckType checkType : checkTypes)
+            {
+                handleByType(checkType, value, messages);
             }
         }
+    }
 
+    /**
+     * 根据不同类型判断并返回校验信息
+     *
+     * @param checkType
+     * @param value
+     * @param messages
+     * @throws Exception
+     */
+    private void handleByType(CheckType checkType, String value, String[] messages) throws ValidateException
+    {
+        if (CheckType.NOT_NULL_AND_BLANK.equals(checkType))
+        {
+            if (value == null || "".equals(value))
+            {
+                throw new ValidateException(messages[0]);
+            }
+        }
     }
 }
