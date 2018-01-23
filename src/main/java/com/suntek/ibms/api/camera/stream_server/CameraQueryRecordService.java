@@ -14,39 +14,39 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- *  查询录像
+ * 查询录像
  *
- *  @author jimmy
+ * @author jimmy
  */
 @Component
 public class CameraQueryRecordService extends ServiceHandler
 {
-    @ParamField(name = "device_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备id不能为空")
-    String deviceId;
+    @ParamField(name = "device_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备id不能为空")
+    ThreadLocal<String> deviceId;
 
-    @ParamField(name = "parent_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "nvr id不能为空")
-    String parentId;
+    @ParamField(name = "parent_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr id不能为空")
+    ThreadLocal<String> parentId;
 
-    @ParamField(name = "device_ip",checkType = CheckType.NOT_NULL_AND_BLANK,message = "设备ip不能为空")
-    String deviceIp;
+    @ParamField(name = "device_ip", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备ip不能为空")
+    ThreadLocal<String> deviceIp;
 
-    @ParamField(name = "channel",checkType = CheckType.NOT_NULL_AND_BLANK,message = "通道号不能为空")
-    String channel;
+    @ParamField(name = "channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "通道号不能为空")
+    ThreadLocal<String> channel;
 
-    @ParamField(name = "user",checkType = CheckType.NOT_NULL_AND_BLANK,message = "nvr用户名不能为空")
-    String user;
+    @ParamField(name = "user", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr用户名不能为空")
+    ThreadLocal<String> user;
 
-    @ParamField(name = "password",checkType = CheckType.NOT_NULL_AND_BLANK,message = "nvr密码不能为空")
-    String password;
+    @ParamField(name = "password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr密码不能为空")
+    ThreadLocal<String> password;
 
-    @ParamField(name = "begin_time",checkType = CheckType.NOT_NULL_AND_BLANK,message = "录像开始时间不能为空")
-    String beginTime;
+    @ParamField(name = "begin_time", checkType = CheckType.NOT_NULL_AND_BLANK, message = "录像开始时间不能为空")
+    ThreadLocal<String> beginTime;
 
-    @ParamField(name = "end_time",checkType = CheckType.NOT_NULL_AND_BLANK,message = "录像结束时间不能为空")
-    String endTime;
+    @ParamField(name = "end_time", checkType = CheckType.NOT_NULL_AND_BLANK, message = "录像结束时间不能为空")
+    ThreadLocal<String> endTime;
 
-    @ParamField(name = "protocol",checkType = CheckType.NOT_NULL_AND_BLANK,message = "协议不能为空")
-    String protocol;
+    @ParamField(name = "protocol", checkType = CheckType.NOT_NULL_AND_BLANK, message = "协议不能为空")
+    ThreadLocal<String> protocol;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -60,10 +60,10 @@ public class CameraQueryRecordService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId,parentId,deviceIp,channel,user,
-                password,beginTime,endTime,protocol);
+        List<RecordItem> recordFile = cameraControlManager.queryRecordFile(deviceId.get(), parentId.get(), deviceIp.get(),
+                channel.get(), user.get(), password.get(), beginTime.get(), endTime.get(), protocol.get());
         return new ResponseBody()
-                .putData("records",recordFile)
+                .putData("records", recordFile)
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

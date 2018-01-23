@@ -22,7 +22,7 @@ public class AreaListService extends ServiceHandler
     AreaManager areaManager;
 
     @ParamField(name = "parent_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "父id不能为空")
-    String parentId;
+    ThreadLocal<String> parentId;
 
     @Override
     public String supportServiceName()
@@ -34,7 +34,7 @@ public class AreaListService extends ServiceHandler
     public Response handle(Request request) throws Exception
     {
         return new ResponseBody()
-                .putData("area_list",areaManager.getAreaListByParentId(parentId))
+                .putData("area_list",areaManager.getAreaListByParentId(parentId.get()))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

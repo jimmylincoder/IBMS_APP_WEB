@@ -22,19 +22,19 @@ public class CameraPtzService extends ServiceHandler
     CameraControlManager cameraControlManager;
 
     @ParamField(name = "protocol", checkType = CheckType.NOT_NULL_AND_BLANK, message = "协议不能为空")
-    String protocol;
+    ThreadLocal<String> protocol;
 
     @ParamField(name = "video_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "摄像头id不能为空")
-    String videoId;
+    ThreadLocal<String> videoId;
 
     @ParamField(name = "command", checkType = CheckType.NOT_NULL_AND_BLANK, message = "控制命令不能为空")
-    String command;
+    ThreadLocal<String> command;
 
     @ParamField(name = "speed")
-    String speed;
+    ThreadLocal<String> speed;
 
     @ParamField(name = "stop_flag")
-    String stopFlag;
+    ThreadLocal<String> stopFlag;
 
     @Override
     public String supportServiceName()
@@ -45,7 +45,7 @@ public class CameraPtzService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.ptz(protocol,videoId,command,speed,stopFlag);
+        cameraControlManager.ptz(protocol.get(), videoId.get(), command.get(), speed.get(), stopFlag.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

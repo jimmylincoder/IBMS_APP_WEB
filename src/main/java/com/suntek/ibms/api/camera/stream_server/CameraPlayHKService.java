@@ -28,31 +28,31 @@ public class CameraPlayHKService extends ServiceHandler
     CameraControlManager cameraControlManager;
 
     @ParamField(name = "port", checkType = CheckType.NOT_NULL_AND_BLANK, message = "端口号不能为空")
-    String port;
+    ThreadLocal<String> port;
 
     @ParamField(name = "media_channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "播放通道号")
-    String mediaChannel;
+    ThreadLocal<String> mediaChannel;
 
     @ParamField(name = "stream_type", checkType = CheckType.NOT_NULL_AND_BLANK, message = "取流形式")
-    String streamType;
+    ThreadLocal<String> streamType;
 
     @ParamField(name = "device_ip", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备ip不能为空")
-    String deviceIp;
+    ThreadLocal<String> deviceIp;
 
     @ParamField(name = "channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "通道号不能为空")
-    String channel;
+    ThreadLocal<String> channel;
 
     @ParamField(name = "user", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr用户名不能为空")
-    String user;
+    ThreadLocal<String> user;
 
     @ParamField(name = "password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr密码不能为空")
-    String password;
+    ThreadLocal<String> password;
 
     @ParamField(name = "begin_time")
-    String beginTime;
+    ThreadLocal<String> beginTime;
 
     @ParamField(name = "end_time")
-    String endTime;
+    ThreadLocal<String> endTime;
 
 
     @Override
@@ -64,8 +64,8 @@ public class CameraPlayHKService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String, Object> res = cameraControlManager.playByHK(mediaChannel, streamType, deviceIp, port, channel,
-                user, password, beginTime, endTime);
+        Map<String, Object> res = cameraControlManager.playByHK(mediaChannel.get(), streamType.get(), deviceIp.get(),
+                port.get(), channel.get(), user.get(), password.get(), beginTime.get(), endTime.get());
         return new ResponseBody()
                 //.putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
                 .putData("session", res.get("session"))

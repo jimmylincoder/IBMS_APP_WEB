@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CameraStopService extends ServiceHandler
 {
-    @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    String session;
+    @ParamField(name = "session", checkType = CheckType.NOT_NULL_AND_BLANK, message = "session不能为空")
+    ThreadLocal<String> session;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -33,7 +33,7 @@ public class CameraStopService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.stop(session);
+        cameraControlManager.stop(session.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

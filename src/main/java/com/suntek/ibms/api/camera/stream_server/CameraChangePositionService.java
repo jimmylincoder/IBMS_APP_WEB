@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
 public class CameraChangePositionService extends ServiceHandler
 {
     @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    String session;
+    ThreadLocal<String> session;
 
     @ParamField(name = "position",checkType = CheckType.NOT_NULL_AND_BLANK,message = "position不能为空")
-    String position;
+    ThreadLocal<String> position;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -36,7 +36,7 @@ public class CameraChangePositionService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.changePlayPosition(session,position);
+        cameraControlManager.changePlayPosition(session.get(),position.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

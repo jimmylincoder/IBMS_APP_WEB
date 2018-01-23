@@ -43,8 +43,9 @@ public abstract class ServiceHandler
                 ParamField paramField = field.getAnnotation(ParamField.class);
                 String name = paramField.name();
                 String value = (String) params.get(name);
-                field.set(this, value);
-
+                ThreadLocal<String> valueLocal = new ThreadLocal<>();
+                valueLocal.set(value);
+                field.set(this, valueLocal);
                 CheckType[] checkTypes = paramField.checkType();
                 String[] messages = paramField.message();
                 if(checkTypes.length > 0)

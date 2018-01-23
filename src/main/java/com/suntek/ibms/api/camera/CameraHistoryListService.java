@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class CameraHistoryListService extends ServiceHandler
 {
     @ParamField(name = "page",checkType = CheckType.NOT_NULL_AND_BLANK,message = "页数不能为空")
-    String page;
+    ThreadLocal<String> page;
 
     @ParamField(name = "user_code",checkType = CheckType.NOT_NULL_AND_BLANK,message = "用户代码不能为空")
-    String userCode;
+    ThreadLocal<String> userCode;
 
     @Autowired
     CameraManager cameraManager;
@@ -39,7 +39,7 @@ public class CameraHistoryListService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Page<CameraVo> cameraVoPage = cameraManager.getHistory(userCode,Integer.parseInt(page));
+        Page<CameraVo> cameraVoPage = cameraManager.getHistory(userCode.get(),Integer.parseInt(page.get()));
         return new ResponseBody()
                 .putData("camera_list",cameraVoPage.getContent())
                 .putData("total_page",cameraVoPage.getTotalPages())

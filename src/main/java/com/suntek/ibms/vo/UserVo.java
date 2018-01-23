@@ -5,10 +5,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.io.Serializable;
 
 /**
- *  用户值对象
+ * 用户值对象
  *
- *  @author jimmy
- *
+ * @author jimmy
  **/
 public class UserVo implements Serializable
 {
@@ -18,8 +17,11 @@ public class UserVo implements Serializable
     @JSONField(name = "user_name")
     private String userName;
 
-    @JSONField(name = "password")
-    private String password;
+    @JSONField(name = "deptCode")
+    private String deptCode;
+
+    @JSONField(name = "deptName")
+    private String deptName;
 
     public String getUserCode()
     {
@@ -41,13 +43,23 @@ public class UserVo implements Serializable
         this.userName = userName;
     }
 
-    public String getPassword()
+    public String getDeptCode()
     {
-        return password;
+        return deptCode;
     }
 
-    public void setPassword(String password)
+    public void setDeptCode(String deptCode)
     {
-        this.password = password;
+        this.deptCode = deptCode;
+    }
+
+    public String getDeptName()
+    {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName)
+    {
+        this.deptName = deptName;
     }
 }

@@ -1,6 +1,8 @@
 package com.suntek.ibms.manager;
 
+import com.suntek.ibms.domain.Area;
 import com.suntek.ibms.domain.User;
+import com.suntek.ibms.repository.AreaRepository;
 import com.suntek.ibms.repository.UserRepository;
 import com.suntek.ibms.util.DESCrypt;
 import com.suntek.ibms.vo.UserVo;
@@ -23,6 +25,9 @@ public class UserManager
 {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    AreaRepository areaRepository;
 
     public List<UserVo> getUserInfo()
     {
@@ -53,6 +58,9 @@ public class UserManager
             return null;
         }
         BeanUtils.copyProperties(user, userVo);
+        String deptCode = user.getDeptCode();
+        Area area = areaRepository.findByOgrCode(deptCode);
+        userVo.setDeptName(area.getName());
         return userVo;
     }
 

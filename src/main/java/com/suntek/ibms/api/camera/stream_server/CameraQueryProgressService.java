@@ -21,7 +21,7 @@ import java.util.Map;
 public class CameraQueryProgressService extends ServiceHandler
 {
     @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    String session;
+    ThreadLocal<String> session;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -35,7 +35,7 @@ public class CameraQueryProgressService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String,Object> map = cameraControlManager.queryProgress(session);
+        Map<String,Object> map = cameraControlManager.queryProgress(session.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .putData("progress",map.get("progress"))

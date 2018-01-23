@@ -22,13 +22,13 @@ public class ChangePasswordService extends ServiceHandler
     UserManager userManager;
 
     @ParamField(name = "user_code", checkType = CheckType.NOT_NULL_AND_BLANK, message = "用户名不能为空")
-    String userCode;
+    ThreadLocal<String> userCode;
 
     @ParamField(name = "new_password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "新密码不能为空")
-    String newPassword;
+    ThreadLocal<String> newPassword;
 
     @ParamField(name = "old_password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "旧密码不能为空")
-    String oldPassword;
+    ThreadLocal<String> oldPassword;
 
     @Override
     public String supportServiceName()
@@ -39,7 +39,7 @@ public class ChangePasswordService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        userManager.changePassword(userCode, newPassword, oldPassword);
+        userManager.changePassword(userCode.get(), newPassword.get(), oldPassword.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

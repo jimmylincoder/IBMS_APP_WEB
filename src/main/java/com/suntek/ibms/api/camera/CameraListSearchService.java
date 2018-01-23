@@ -24,10 +24,10 @@ public class CameraListSearchService extends ServiceHandler
     CameraManager cameraManager;
 
     @ParamField(name = "page",checkType = CheckType.NOT_NULL_AND_BLANK,message = "页数不能为空")
-    String page;
+    ThreadLocal<String> page;
 
     @ParamField(name = "keyword",checkType = CheckType.NOT_NULL_AND_BLANK,message = "关键字不能为空")
-    String keyword;
+    ThreadLocal<String> keyword;
 
     @Override
     public String supportServiceName()
@@ -38,7 +38,7 @@ public class CameraListSearchService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Page<CameraVo> cameraVoPage = cameraManager.getCameraListByKeyword(keyword,Integer.parseInt(page));
+        Page<CameraVo> cameraVoPage = cameraManager.getCameraListByKeyword(keyword.get(),Integer.parseInt(page.get()));
         return new ResponseBody()
                 .putData("camera_list",cameraVoPage.getContent())
                 .putData("total_page",cameraVoPage.getTotalPages())

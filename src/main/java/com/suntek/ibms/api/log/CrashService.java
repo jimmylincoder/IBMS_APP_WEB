@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class CrashService extends ServiceHandler
 {
     @ParamField(name = "error_message")
-    String errorMessage;
+    ThreadLocal<String> errorMessage;
 
     @Override
     public String supportServiceName()
@@ -28,7 +28,7 @@ public class CrashService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        LoggerUtil.error(errorMessage);
+        LoggerUtil.error(errorMessage.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

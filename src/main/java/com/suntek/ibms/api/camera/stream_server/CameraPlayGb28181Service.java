@@ -23,28 +23,28 @@ import java.util.Map;
 public class CameraPlayGb28181Service extends ServiceHandler
 {
     @ParamField(name = "device_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备id不能为空")
-    String deviceId;
+    ThreadLocal<String> deviceId;
 
     @ParamField(name = "parent_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr id不能为空")
-    String parentId;
+    ThreadLocal<String> parentId;
 
     @ParamField(name = "device_ip", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备ip不能为空")
-    String deviceIp;
+    ThreadLocal<String> deviceIp;
 
     @ParamField(name = "channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "通道号不能为空")
-    String channel;
+    ThreadLocal<String> channel;
 
     @ParamField(name = "user", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr用户名不能为空")
-    String user;
+    ThreadLocal<String> user;
 
     @ParamField(name = "password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr密码不能为空")
-    String password;
+    ThreadLocal<String> password;
 
     @ParamField(name = "begin_time")
-    String beginTime;
+    ThreadLocal<String> beginTime;
 
     @ParamField(name = "end_time")
-    String endTime;
+    ThreadLocal<String> endTime;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -58,8 +58,9 @@ public class CameraPlayGb28181Service extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String, Object> res = cameraControlManager.playByGB28181(deviceId, parentId, deviceIp, channel, user, password,
-                beginTime, endTime);
+        Map<String, Object> res = cameraControlManager.playByGB28181(deviceId.get(), parentId.get(), deviceIp.get(),
+                channel.get(), user.get(), password.get(),
+                beginTime.get(), endTime.get());
         return new ResponseBody()
                 //.putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
                 .putData("session", res.get("session"))

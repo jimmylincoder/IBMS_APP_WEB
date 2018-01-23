@@ -24,6 +24,9 @@ public class User
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "DEPT_CODE")
+    private String deptCode;
+
     public String getUserCode()
     {
         return userCode;
@@ -52,5 +55,15 @@ public class User
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public void setDeptCode(String deptCode)
+    {
+        this.deptCode = deptCode;
+    }
+
+    public String getDeptCode()
+    {
+        return deptCode;
     }
 }

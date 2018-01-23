@@ -22,7 +22,7 @@ public class AppVersionService extends ServiceHandler
     AppVersionManager appVersionManager;
 
     @ParamField(name = "version_num", checkType = CheckType.NOT_NULL_AND_BLANK, message = "版本号不能为空")
-    String versionNum;
+    ThreadLocal<String> versionNum;
 
     @Override
     public String supportServiceName()
@@ -34,7 +34,7 @@ public class AppVersionService extends ServiceHandler
     public Response handle(Request request) throws Exception
     {
         return new ResponseBody()
-                .putData("version", appVersionManager.checkVersion(versionNum))
+                .putData("version", appVersionManager.checkVersion(versionNum.get()))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

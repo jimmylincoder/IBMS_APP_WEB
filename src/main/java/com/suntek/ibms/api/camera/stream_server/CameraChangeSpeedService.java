@@ -20,10 +20,10 @@ public class CameraChangeSpeedService extends ServiceHandler
 {
 
     @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    String session;
+    ThreadLocal<String> session;
 
     @ParamField(name = "speed",checkType = CheckType.NOT_NULL_AND_BLANK,message = "速度不能为空")
-    String speed;
+    ThreadLocal<String> speed;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -37,7 +37,7 @@ public class CameraChangeSpeedService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.changeSpeed(session,speed);
+        cameraControlManager.changeSpeed(session.get(),speed.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

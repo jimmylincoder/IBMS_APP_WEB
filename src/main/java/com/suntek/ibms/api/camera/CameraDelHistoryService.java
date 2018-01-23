@@ -22,10 +22,10 @@ public class CameraDelHistoryService extends ServiceHandler
     CameraManager cameraManager;
 
     @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
-    String cameraId;
+    ThreadLocal<String> cameraId;
 
     @ParamField(name = "user_code",checkType = CheckType.NOT_NULL_AND_BLANK,message = "用户代码不能为空")
-    String userCode;
+    ThreadLocal<String> userCode;
 
     @Override
     public String supportServiceName()
@@ -36,7 +36,7 @@ public class CameraDelHistoryService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraManager.delHistory(userCode,cameraId);
+        cameraManager.delHistory(userCode.get(),cameraId.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();

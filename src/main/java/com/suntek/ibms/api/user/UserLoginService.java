@@ -22,11 +22,11 @@ public class UserLoginService extends ServiceHandler
 {
     //用户名
     @ParamField(name = "user_name", checkType = {CheckType.NOT_NULL_AND_BLANK}, message = "用户名不能为空")
-    String userName;
+    ThreadLocal<String> userName;
 
     //密码
     @ParamField(name = "password", checkType = {CheckType.NOT_NULL_AND_BLANK}, message = "密码不能为空")
-    String password;
+    ThreadLocal<String> password;
 
     @Autowired
     UserManager userManager;
@@ -41,7 +41,7 @@ public class UserLoginService extends ServiceHandler
     public Response handle(Request request) throws Exception
     {
         //返回响应体拼接类
-        UserVo userVo = userManager.login(userName, password);
+        UserVo userVo = userManager.login(userName.get(), password.get());
         if (userVo == null)
         {
             return new ResponseBody()

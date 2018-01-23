@@ -25,7 +25,7 @@ public class CameraInfoService extends ServiceHandler
     CameraManager cameraManager;
 
     @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
-    String cameraId;
+    ThreadLocal<String> cameraId;
 
     @Override
     public String supportServiceName()
@@ -38,7 +38,7 @@ public class CameraInfoService extends ServiceHandler
     {
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
-                .putData("camera",cameraManager.getOne(cameraId))
+                .putData("camera",cameraManager.getOne(cameraId.get()))
                 .bulid();
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class CameraPauseService extends ServiceHandler
 {
     @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    String session;
+    ThreadLocal<String> session;
 
     @Autowired
     CameraControlManager cameraControlManager;
@@ -33,7 +33,7 @@ public class CameraPauseService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        cameraControlManager.pausePlay(session);
+        cameraControlManager.pausePlay(session.get());
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
