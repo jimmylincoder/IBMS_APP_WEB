@@ -1,4 +1,4 @@
-package com.suntek.ibms.componet;
+package com.suntek.ibms.componet.controller.encryption;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Component;

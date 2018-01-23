@@ -1,4 +1,4 @@
-package com.suntek.ibms.componet;
+package com.suntek.ibms.componet.controller.body;
 
 import java.util.HashMap;
 import java.util.Map;

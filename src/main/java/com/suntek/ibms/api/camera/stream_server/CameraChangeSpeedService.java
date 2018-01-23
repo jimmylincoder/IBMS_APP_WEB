@@ -1,9 +1,9 @@
 package com.suntek.ibms.api.camera.stream_server;
 
-import com.suntek.ibms.componet.Request;
-import com.suntek.ibms.componet.Response;
-import com.suntek.ibms.componet.ResponseBody;
-import com.suntek.ibms.componet.ServiceHandler;
+import com.suntek.ibms.componet.controller.body.Request;
+import com.suntek.ibms.componet.controller.body.Response;
+import com.suntek.ibms.componet.controller.body.ResponseBody;
+import com.suntek.ibms.componet.base.ServiceHandler;
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.manager.CameraControlManager;

@@ -1,4 +1,4 @@
-package com.suntek.ibms.componet;
+package com.suntek.ibms.componet.media;
 
 import java.util.Map;
 

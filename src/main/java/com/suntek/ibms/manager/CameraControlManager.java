@@ -1,8 +1,8 @@
 package com.suntek.ibms.manager;
 
 
-import com.suntek.ibms.componet.MediaHttpEngine;
-import com.suntek.ibms.componet.MediaResponse;
+import com.suntek.ibms.componet.media.MediaHttpEngine;
+import com.suntek.ibms.componet.media.MediaResponse;
 import com.suntek.ibms.domain.Camera;
 import com.suntek.ibms.repository.CameraRepository;
 import com.suntek.ibms.vo.RecordItem;

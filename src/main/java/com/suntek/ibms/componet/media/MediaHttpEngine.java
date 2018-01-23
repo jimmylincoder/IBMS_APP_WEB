@@ -1,7 +1,7 @@
-package com.suntek.ibms.componet;
+package com.suntek.ibms.componet.media;
 
+import com.suntek.ibms.componet.http.HttpClient;
 import com.suntek.ibms.exception.MediaException;
-import com.suntek.ibms.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

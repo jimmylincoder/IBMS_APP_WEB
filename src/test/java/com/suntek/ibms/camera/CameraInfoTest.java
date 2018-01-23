@@ -1,7 +1,7 @@
 package com.suntek.ibms.camera;
 import com.suntek.ibms.App;
-import com.suntek.ibms.componet.Request;
-import com.suntek.ibms.componet.RequestBody;
+import com.suntek.ibms.componet.controller.body.Request;
+import com.suntek.ibms.componet.controller.body.RequestBody;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

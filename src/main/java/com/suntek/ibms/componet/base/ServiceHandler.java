@@ -1,5 +1,7 @@
-package com.suntek.ibms.componet;
+package com.suntek.ibms.componet.base;
 
+import com.suntek.ibms.componet.controller.body.Request;
+import com.suntek.ibms.componet.controller.body.Response;
 import com.suntek.ibms.componet.annotation.CheckType;
 import com.suntek.ibms.componet.annotation.ParamField;
 import com.suntek.ibms.exception.ValidateException;

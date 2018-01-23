@@ -1,8 +1,8 @@
 package com.suntek.ibms.api.camera;
 
-import com.suntek.ibms.componet.Request;
-import com.suntek.ibms.componet.Response;
-import com.suntek.ibms.componet.ServiceHandler;
+import com.suntek.ibms.componet.controller.body.Request;
+import com.suntek.ibms.componet.controller.body.Response;
+import com.suntek.ibms.componet.base.ServiceHandler;
 import org.springframework.stereotype.Component;
 
 /**
