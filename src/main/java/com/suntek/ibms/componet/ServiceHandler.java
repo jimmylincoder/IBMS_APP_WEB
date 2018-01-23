@@ -69,9 +69,9 @@ public abstract class ServiceHandler
             String[] messages = paramField.message();
             if (checkTypes.length < 0)
                 return;
-            for (CheckType checkType : checkTypes)
+            for (int i = 0; i < checkTypes.length; i++)
             {
-                handleByType(checkType, value, messages);
+                handleByType(checkTypes[i], value, messages, i);
             }
         }
     }
@@ -84,14 +84,28 @@ public abstract class ServiceHandler
      * @param messages
      * @throws Exception
      */
-    private void handleByType(CheckType checkType, String value, String[] messages) throws ValidateException
+    private void handleByType(CheckType checkType, String value, String[] messages, int index) throws ValidateException
     {
         if (CheckType.NOT_NULL_AND_BLANK.equals(checkType))
         {
             if (value == null || "".equals(value))
-            {
-                throw new ValidateException(messages[0]);
-            }
+                throw new ValidateException(messages[index]);
+        } else if (CheckType.NOT_NULL.equals(checkType))
+        {
+            if (value == null)
+                throw new ValidateException(messages[index]);
+        } else if (CheckType.MAIL.equals(checkType))
+        {
+            if (!value.matches("[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+"))
+                throw new ValidateException(messages[index]);
+        } else if (CheckType.PHONE.equals(checkType))
+        {
+            if (!value.matches("^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$"))
+                throw new ValidateException(messages[index]);
+        } else if (CheckType.NOT_BLANK.equals(checkType))
+        {
+            if ("".equals(checkType))
+                throw new ValidateException(messages[index]);
         }
     }
 }
