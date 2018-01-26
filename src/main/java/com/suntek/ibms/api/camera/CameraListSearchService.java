@@ -24,10 +24,10 @@ public class CameraListSearchService extends ServiceHandler
     CameraManager cameraManager;
 
     @ParamField(name = "page",checkType = CheckType.NOT_NULL_AND_BLANK,message = "页数不能为空")
-    ThreadLocal<String> page;
+    ThreadLocal<String> page = new ThreadLocal<>();
 
     @ParamField(name = "keyword",checkType = CheckType.NOT_NULL_AND_BLANK,message = "关键字不能为空")
-    ThreadLocal<String> keyword;
+    ThreadLocal<String> keyword = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

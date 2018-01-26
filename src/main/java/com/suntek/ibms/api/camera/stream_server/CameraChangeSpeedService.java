@@ -20,10 +20,10 @@ public class CameraChangeSpeedService extends ServiceHandler
 {
 
     @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    ThreadLocal<String> session;
+    ThreadLocal<String> session = new ThreadLocal<>();
 
     @ParamField(name = "speed",checkType = CheckType.NOT_NULL_AND_BLANK,message = "速度不能为空")
-    ThreadLocal<String> speed;
+    ThreadLocal<String> speed = new ThreadLocal<>();
 
     @Autowired
     CameraControlManager cameraControlManager;

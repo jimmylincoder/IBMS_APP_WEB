@@ -58,10 +58,11 @@ public abstract class ServiceHandler
             ParamField paramField = field.getAnnotation(ParamField.class);
             String name = paramField.name();
             String value = (String) params.get(name);
-            ThreadLocal<String> valueLocal = new ThreadLocal<>();
-            valueLocal.set(value);
+            ThreadLocal<String> valueLocal = null;
             try
             {
+                valueLocal = (ThreadLocal<String>) field.get(this);
+                valueLocal.set(value);
                 field.set(this, valueLocal);
             } catch (IllegalAccessException e)
             {

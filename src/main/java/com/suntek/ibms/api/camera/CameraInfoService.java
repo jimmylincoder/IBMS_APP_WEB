@@ -22,7 +22,7 @@ public class CameraInfoService extends ServiceHandler
     CameraManager cameraManager;
 
     @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
-    ThreadLocal<String> cameraId;
+    ThreadLocal<String> cameraId = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

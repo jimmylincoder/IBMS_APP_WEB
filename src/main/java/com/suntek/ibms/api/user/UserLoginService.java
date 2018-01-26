@@ -21,12 +21,12 @@ import org.springframework.stereotype.Component;
 public class UserLoginService extends ServiceHandler
 {
     //用户名
-    @ParamField(name = "user_name", checkType = {CheckType.NOT_NULL_AND_BLANK}, message = "用户名不能为空")
-    ThreadLocal<String> userName;
+    @ParamField(name = "user_name", checkType = {CheckType.NOT_NULL_AND_BLANK}, message = {"用户名不能为空"})
+    ThreadLocal<String> userName = new ThreadLocal<>();
 
     //密码
     @ParamField(name = "password", checkType = {CheckType.NOT_NULL_AND_BLANK}, message = "密码不能为空")
-    ThreadLocal<String> password;
+    ThreadLocal<String> password = new ThreadLocal<>();
 
     @Autowired
     UserManager userManager;

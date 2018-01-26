@@ -22,7 +22,7 @@ public class AppVersionService extends ServiceHandler
     AppVersionManager appVersionManager;
 
     @ParamField(name = "version_num", checkType = CheckType.NOT_NULL_AND_BLANK, message = "版本号不能为空")
-    ThreadLocal<String> versionNum;
+    ThreadLocal<String> versionNum = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

@@ -22,13 +22,13 @@ public class ChangePasswordService extends ServiceHandler
     UserManager userManager;
 
     @ParamField(name = "user_code", checkType = CheckType.NOT_NULL_AND_BLANK, message = "用户名不能为空")
-    ThreadLocal<String> userCode;
+    ThreadLocal<String> userCode = new ThreadLocal<>();
 
     @ParamField(name = "new_password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "新密码不能为空")
-    ThreadLocal<String> newPassword;
+    ThreadLocal<String> newPassword = new ThreadLocal<>();
 
     @ParamField(name = "old_password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "旧密码不能为空")
-    ThreadLocal<String> oldPassword;
+    ThreadLocal<String> oldPassword = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

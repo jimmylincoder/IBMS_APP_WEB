@@ -28,31 +28,31 @@ public class CameraPlayHKService extends ServiceHandler
     CameraControlManager cameraControlManager;
 
     @ParamField(name = "port", checkType = CheckType.NOT_NULL_AND_BLANK, message = "端口号不能为空")
-    ThreadLocal<String> port;
+    ThreadLocal<String> port = new ThreadLocal<>();
 
     @ParamField(name = "media_channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "播放通道号")
-    ThreadLocal<String> mediaChannel;
+    ThreadLocal<String> mediaChannel = new ThreadLocal<>();
 
     @ParamField(name = "stream_type", checkType = CheckType.NOT_NULL_AND_BLANK, message = "取流形式")
-    ThreadLocal<String> streamType;
+    ThreadLocal<String> streamType = new ThreadLocal<>();
 
     @ParamField(name = "device_ip", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备ip不能为空")
-    ThreadLocal<String> deviceIp;
+    ThreadLocal<String> deviceIp = new ThreadLocal<>();
 
     @ParamField(name = "channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "通道号不能为空")
-    ThreadLocal<String> channel;
+    ThreadLocal<String> channel = new ThreadLocal<>();
 
     @ParamField(name = "user", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr用户名不能为空")
-    ThreadLocal<String> user;
+    ThreadLocal<String> user = new ThreadLocal<>();
 
     @ParamField(name = "password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr密码不能为空")
-    ThreadLocal<String> password;
+    ThreadLocal<String> password = new ThreadLocal<>();
 
     @ParamField(name = "begin_time")
-    ThreadLocal<String> beginTime;
+    ThreadLocal<String> beginTime = new ThreadLocal<>();
 
     @ParamField(name = "end_time")
-    ThreadLocal<String> endTime;
+    ThreadLocal<String> endTime = new ThreadLocal<>();
 
 
     @Override

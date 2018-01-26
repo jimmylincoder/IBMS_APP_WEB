@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 public class CameraResumeService extends ServiceHandler
 {
 
-    @ParamField(name = "session",checkType = CheckType.NOT_NULL_AND_BLANK,message = "session不能为空")
-    ThreadLocal<String> session;
+    @ParamField(name = "session", checkType = CheckType.NOT_NULL_AND_BLANK, message = "session不能为空")
+    ThreadLocal<String> session = new ThreadLocal<>();
 
     @Autowired
     CameraControlManager cameraControlManager;

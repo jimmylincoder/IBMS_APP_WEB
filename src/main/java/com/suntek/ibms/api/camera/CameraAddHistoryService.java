@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
 public class CameraAddHistoryService extends ServiceHandler
 {
     @ParamField(name = "camera_id",checkType = CheckType.NOT_NULL_AND_BLANK,message = "摄像机id不能为空")
-    ThreadLocal<String> cameraId;
+    ThreadLocal<String> cameraId = new ThreadLocal<>();
 
     @ParamField(name = "user_code",checkType = CheckType.NOT_NULL_AND_BLANK,message = "用户代码不能为空")
-    ThreadLocal<String> userCode;
+    ThreadLocal<String> userCode = new ThreadLocal<>();
 
     @Autowired
     CameraManager cameraManager;

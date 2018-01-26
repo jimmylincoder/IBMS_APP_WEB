@@ -21,8 +21,8 @@ public class AreaLevelService extends ServiceHandler
     @Autowired
     AreaManager areaManager;
 
-    @ParamField(name = "level",checkType = CheckType.NOT_NULL_AND_BLANK,message = "等级不能为空")
-    ThreadLocal<String> level;
+    @ParamField(name = "level", checkType = CheckType.NOT_NULL_AND_BLANK, message = "等级不能为空")
+    ThreadLocal<String> level = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()
@@ -35,7 +35,7 @@ public class AreaLevelService extends ServiceHandler
     {
         return new ResponseBody()
                 .setStatus(Response.STATUS_SUCCESS)
-                .putData("area_list",areaManager.getAreaListByLevel(level.get()))
+                .putData("area_list", areaManager.getAreaListByLevel(level.get()))
                 .bulid();
     }
 }

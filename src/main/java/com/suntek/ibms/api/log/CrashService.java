@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class CrashService extends ServiceHandler
 {
     @ParamField(name = "error_message")
-    ThreadLocal<String> errorMessage;
+    ThreadLocal<String> errorMessage = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

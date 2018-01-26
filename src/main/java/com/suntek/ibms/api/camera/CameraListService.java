@@ -22,11 +22,11 @@ public class CameraListService extends ServiceHandler
 {
     //区域id
     @ParamField(name = "area_id")
-    ThreadLocal<String> areaId;
+    ThreadLocal<String> areaId = new ThreadLocal<>();
 
     //页数
     @ParamField(name = "page",checkType = CheckType.NOT_NULL_AND_BLANK,message = "页数不能为空")
-    ThreadLocal<String> page;
+    ThreadLocal<String> page = new ThreadLocal<>();
 
 
     @Autowired

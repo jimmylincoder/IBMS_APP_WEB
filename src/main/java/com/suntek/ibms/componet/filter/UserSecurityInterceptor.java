@@ -1,6 +1,5 @@
 package com.suntek.ibms.componet.filter;
 
-import com.suntek.ibms.vo.UserVo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

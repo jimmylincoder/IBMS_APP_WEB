@@ -22,28 +22,28 @@ import java.util.Map;
 public class CameraPlayGb28181Service extends ServiceHandler
 {
     @ParamField(name = "device_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备id不能为空")
-    ThreadLocal<String> deviceId;
+    ThreadLocal<String> deviceId = new ThreadLocal<>();
 
     @ParamField(name = "parent_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr id不能为空")
-    ThreadLocal<String> parentId;
+    ThreadLocal<String> parentId = new ThreadLocal<>();
 
     @ParamField(name = "device_ip", checkType = CheckType.NOT_NULL_AND_BLANK, message = "设备ip不能为空")
-    ThreadLocal<String> deviceIp;
+    ThreadLocal<String> deviceIp = new ThreadLocal<>();
 
     @ParamField(name = "channel", checkType = CheckType.NOT_NULL_AND_BLANK, message = "通道号不能为空")
-    ThreadLocal<String> channel;
+    ThreadLocal<String> channel = new ThreadLocal<>();
 
     @ParamField(name = "user", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr用户名不能为空")
-    ThreadLocal<String> user;
+    ThreadLocal<String> user = new ThreadLocal<>();
 
     @ParamField(name = "password", checkType = CheckType.NOT_NULL_AND_BLANK, message = "nvr密码不能为空")
-    ThreadLocal<String> password;
+    ThreadLocal<String> password = new ThreadLocal<>();
 
     @ParamField(name = "begin_time")
-    ThreadLocal<String> beginTime;
+    ThreadLocal<String> beginTime = new ThreadLocal<>();
 
     @ParamField(name = "end_time")
-    ThreadLocal<String> endTime;
+    ThreadLocal<String> endTime = new ThreadLocal<>();
 
     @Autowired
     CameraControlManager cameraControlManager;

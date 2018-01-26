@@ -22,19 +22,19 @@ public class CameraPtzService extends ServiceHandler
     CameraControlManager cameraControlManager;
 
     @ParamField(name = "protocol", checkType = CheckType.NOT_NULL_AND_BLANK, message = "协议不能为空")
-    ThreadLocal<String> protocol;
+    ThreadLocal<String> protocol = new ThreadLocal<>();
 
     @ParamField(name = "video_id", checkType = CheckType.NOT_NULL_AND_BLANK, message = "摄像头id不能为空")
-    ThreadLocal<String> videoId;
+    ThreadLocal<String> videoId = new ThreadLocal<>();
 
     @ParamField(name = "command", checkType = CheckType.NOT_NULL_AND_BLANK, message = "控制命令不能为空")
-    ThreadLocal<String> command;
+    ThreadLocal<String> command = new ThreadLocal<>();
 
     @ParamField(name = "speed")
-    ThreadLocal<String> speed;
+    ThreadLocal<String> speed = new ThreadLocal<>();
 
     @ParamField(name = "stop_flag")
-    ThreadLocal<String> stopFlag;
+    ThreadLocal<String> stopFlag = new ThreadLocal<>();
 
     @Override
     public String supportServiceName()

@@ -64,9 +64,9 @@ public class HttpClient
         return response;
     }
 
-    public String postByJson(String name, String url) throws IOException
+    public String postByJson(String content, String url) throws IOException
     {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), name);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
