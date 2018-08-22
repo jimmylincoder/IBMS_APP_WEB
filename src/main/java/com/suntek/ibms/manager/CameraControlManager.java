@@ -44,22 +44,17 @@ public class CameraControlManager
      * 历史则加上开始时间和结束时间字段
      *
      * @param deviceId
-     * @param deviceIp
-     * @param channel
-     * @param user
-     * @param password
      * @return
      * @throws Exception
      */
-    public Map<String, Object> playByGB28181(String deviceId, String parentId, String deviceIp,
-                                             String channel, String user,
-                                             String password, String beginTime,
+    public Map<String, Object> playByGB28181(String deviceId, String parentId, String beginTime,
                                              String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
         endTime = endTime == null ? "" : timeStrToTStr(endTime);
-
+        Camera camera = cameraRepository.findByDeviceId(deviceId);
+        String deviceIp = camera.getIp();
         params.put("DeviceID", deviceId);
         params.put("DeviceIP", deviceIp);
         params.put("ParentID", parentId);
@@ -67,9 +62,9 @@ public class CameraControlManager
             params.put("DevicePort", "5061");
         else
             params.put("DevicePort", nvrPort);
-        params.put("DeviceChn", channel);
-        params.put("DeviceUser", user);
-        params.put("DevicePass", password);
+        params.put("DeviceChn", camera.getChannel());
+        params.put("DeviceUser", camera.getUserName());
+        params.put("DevicePass", camera.getPassword());
         params.put("BeginTime", beginTime);
         params.put("EndTime", endTime);
         params.put("Protocol", "GB28181");
@@ -150,11 +145,11 @@ public class CameraControlManager
      *
      * @throws Exception
      */
-    public List<RecordItem> queryRecordFile(String deviceId, String parentId, String deviceIp,
-                                            String channel, String user,
-                                            String password, String beginTime,
+    public List<RecordItem> queryRecordFile(String deviceId, String parentId, String beginTime,
                                             String endTime, String protocol) throws Exception
     {
+        Camera camera = cameraRepository.findByDeviceId(deviceId);
+        String deviceIp = camera.getIp();
         Map<String, Object> params = new HashMap<>();
         params.put("DeviceID", deviceId);
         params.put("ParentID", parentId);
@@ -167,11 +162,11 @@ public class CameraControlManager
                 params.put("DevicePort", nvrPort);
         } else if ("Hikvision".equals(protocol))
         {
-            params.put("DevicePort", 8000);
+            params.put("DevicePort", camera.getPort());
         }
-        params.put("DeviceChn", channel);
-        params.put("DeviceUser", user);
-        params.put("DevicePass", password);
+        params.put("DeviceChn", camera.getChannel());
+        params.put("DeviceUser", camera.getUserName());
+        params.put("DevicePass", camera.getPassword());
         params.put("BeginTime", timeStrToTStr(beginTime));
         params.put("EndTime", timeStrToTStr(endTime));
         params.put("Protocol", protocol);
@@ -241,30 +236,26 @@ public class CameraControlManager
      *
      * @param mediaChannel 手机端播放通道
      * @param streamType   取流形式
-     * @param deviceIp     设备ip
-     * @param channel      通道号
-     * @param user         用户名
-     * @param password     密码
      * @param beginTime    开始时间
      * @param endTime      播放时间
      * @return
      * @throws Exception
      */
-    public Map<String, Object> playByHK(String mediaChannel, String streamType, String deviceIp, String port,
-                                        String channel, String user, String password, String beginTime, String endTime) throws Exception
+    public Map<String, Object> playByHK(String deviceId, String mediaChannel, String streamType,
+                                        String beginTime, String endTime) throws Exception
     {
         Map<String, Object> params = new HashMap<>();
         beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
         endTime = endTime == null ? "" : timeStrToTStr(endTime);
-
+        Camera camera = cameraRepository.findByDeviceId(deviceId);
         params.put("Protocol", "Hikvision");
-        params.put("DeviceIP", deviceIp);
+        params.put("DeviceIP", camera.getIp());
         params.put("MediaChannel", mediaChannel);
         params.put("StreamType", streamType);
-        params.put("DevicePort", port);
-        params.put("DeviceChn", channel);
-        params.put("DeviceUser", user);
-        params.put("DevicePass", password);
+        params.put("DevicePort", camera.getPort());
+        params.put("DeviceChn", camera.getChannel());
+        params.put("DeviceUser", camera.getUserName());
+        params.put("DevicePass", camera.getPassword());
         params.put("BeginTime", beginTime);
         params.put("EndTime", endTime);
         MediaResponse response = mediaHttpEngine.request("play", params);

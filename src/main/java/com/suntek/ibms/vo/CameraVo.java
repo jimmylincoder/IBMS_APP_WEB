@@ -33,23 +33,8 @@ public class CameraVo implements Serializable
     @JSONField(name = "place")
     private String place;
 
-    @JSONField(name = "channel")
-    private String channel;
-
     @JSONField(name = "org_code")
     private String orgCode;
-
-    @JSONField(name = "ip")
-    private String ip;
-
-    @JSONField(name = "port")
-    private String port;
-
-    @JSONField(name = "user_name")
-    private String userName;
-
-    @JSONField(name = "password")
-    private String password;
 
     @JSONField(name = "play_time")
     private long playTime;
@@ -106,16 +91,6 @@ public class CameraVo implements Serializable
         this.place = place;
     }
 
-    public String getChannel()
-    {
-        return channel;
-    }
-
-    public void setChannel(String channel)
-    {
-        this.channel = channel;
-    }
-
     public String getOrgCode()
     {
         return orgCode;
@@ -124,46 +99,6 @@ public class CameraVo implements Serializable
     public void setOrgCode(String orgCode)
     {
         this.orgCode = orgCode;
-    }
-
-    public String getIp()
-    {
-        return ip;
-    }
-
-    public void setIp(String ip)
-    {
-        this.ip = ip;
-    }
-
-    public String getPort()
-    {
-        return port;
-    }
-
-    public void setPort(String port)
-    {
-        this.port = port;
-    }
-
-    public String getUserName()
-    {
-        return userName;
-    }
-
-    public void setUserName(String userName)
-    {
-        this.userName = userName;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public void setPassword(String password)
-    {
-        this.password = password;
     }
 
     public long getPlayTime()
