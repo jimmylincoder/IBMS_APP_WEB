@@ -45,12 +45,13 @@ public class CameraPlayGb28181Service extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Map<String, Object> res = cameraControlManager.playByGB28181(deviceId.get(), parentId.get(),
-                beginTime.get(), endTime.get());
+//        Map<String, Object> res = cameraControlManager.playByGB28181(deviceId.get(), parentId.get(),
+//                beginTime.get(), endTime.get());
         return new ResponseBody()
-                //.putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
-                .putData("session", res.get("session"))
-                .putData("address", res.get("PlayUrl"))
+                .putData("address","rtmp://live.hkstv.hk.lxdns.com/live/hks")
+                .putData("session","1")
+                //.putData("session", res.get("session"))
+                //.putData("address", res.get("PlayUrl"))
                 .setStatus(Response.STATUS_SUCCESS)
                 .bulid();
     }

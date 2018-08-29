@@ -76,6 +76,39 @@ public class HttpClient
         return res;
     }
 
+    public Response postByForm(String url, Map<String, Object> header, Map<String, Object> params) throws IOException
+    {
+        RequestBody requestBody = getFormBody(params);
+        Request.Builder builder = new Request.Builder();
+        for (String key : header.keySet())
+            builder.addHeader(key, (String) header.get(key));
+        Request request = builder.url(url).post(requestBody)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response;
+    }
+
+    private RequestBody getFormBody(Map<String, Object> params)
+    {
+        FormEncodingBuilder builder = new FormEncodingBuilder();
+        for (String key : params.keySet())
+        {
+            builder.add(key, (String) params.get(key));
+        }
+        return builder.build();
+    }
+
+    public Response get(String url, Map<String, String> header) throws IOException
+    {
+        Request.Builder builder = new Request.Builder();
+        for (String key : header.keySet())
+            builder.addHeader(key, header.get(key));
+        Request request = builder.url(url).get()
+                .build();
+        Response response = client.newCall(request).execute();
+        return response;
+    }
+
 
     /**
      * xml转map
