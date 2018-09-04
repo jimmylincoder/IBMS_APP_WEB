@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 用户仓库
  *
@@ -26,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, String>
     @Modifying
     @Query("update User user set user.password = ?2 where user.userCode = ?1")
     int updateUserPassword(String userCode, String password);
+
+    List<User> findByUserCode(String userName);
+
+    void deleteByUserCode(String userCode);
 }

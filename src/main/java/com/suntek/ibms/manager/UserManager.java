@@ -9,6 +9,9 @@ import com.suntek.ibms.util.DESCrypt;
 import com.suntek.ibms.vo.UserVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -40,6 +43,22 @@ public class UserManager
             BeanUtils.copyProperties(user, userVo);
             userVos.add(userVo);
         }
+        return userVos;
+    }
+
+    public Page<UserVo> findUserList(int page, int pageSize)
+    {
+        Page<User> users = userRepository.findAll(new PageRequest(page - 1, pageSize));
+        Page<UserVo> userVos = users.map(new Converter<User, UserVo>()
+        {
+            @Override
+            public UserVo convert(User user)
+            {
+                UserVo userVo = new UserVo();
+                BeanUtils.copyProperties(user, userVo);
+                return userVo;
+            }
+        });
         return userVos;
     }
 
@@ -85,5 +104,22 @@ public class UserManager
             throw new UserException("旧密码输入不正确");
         }
         userRepository.updateUserPassword(userCode, DESCrypt.md5(newPassword));
+    }
+
+    public void addUser(String userName, String password, String name) throws UserException
+    {
+        List<User> users = userRepository.findByUserCode(userName);
+        if (users.size() == 0)
+            throw new UserException("用户已存在");
+        User user = new User();
+        user.setUserCode(userName);
+        user.setUserName(name);
+        user.setPassword(DESCrypt.md5(password));
+        userRepository.save(user);
+    }
+
+    public void del(String userCode)
+    {
+        userRepository.deleteByUserCode(userCode);
     }
 }
