@@ -30,53 +30,68 @@ public class TreeBuilder
         {
             OrgNode orgTree = new OrgNode();
             orgTree.setId(orgVo.getOrgId());
+            orgTree.setNodeName(orgVo.getOrgName());
+            orgTree.setOrgCode(orgVo.getOrgCode());
             if (orgVo.getParentId() == null)
             {
                 orgTree.setParentNodeId("-1");
                 orgTree.setNodeLevel(1);
             } else
                 orgTree.setParentNodeId(orgVo.getParentId());
-            orgTree.setNodeName(orgVo.getOrgName());
-            orgTree.setOrgCode(orgVo.getOrgCode());
             orgTrees.add(orgTree);
         }
         return orgTrees;
     }
 
-    public List<OrgNode> convert(List<InfinvoaOrgVo> orgVos)
+    public OrgNode convert(List<InfinvoaOrgVo> orgVos)
     {
-        return tree(convert(orgVos));
+        List<OrgNode> orgNodes = convertToTree(orgVos);
+        return tree(getRoot(orgNodes), removeRoot(orgNodes));
     }
 
-    public List<OrgNode> tree(List<OrgNode> orgVos)
+    public OrgNode getRoot(List<OrgNode> orgVos)
     {
-        List<OrgNode> nodes = new ArrayList<>();
-        Map<String, OrgNode> orgVoMap = new HashMap<>();
-        //将列表转成以id为键 机构为值
-        for (OrgNode orgVo : orgVos)
-            orgVoMap.put(orgVo.getId(), orgVo);
-
-        for (OrgNode orgVo : orgVos)
+        OrgNode root = new OrgNode();
+        for (OrgNode orgNode : orgVos)
         {
-            //获取父节点
-            OrgNode haveParent = orgVoMap.get(orgVo.getParentNodeId());
-            //不为空则将此节点加入父节点孩子中,为空则说明为根节点
-            if (haveParent != null)
+            if ("-1".equals(orgNode.getParentNodeId()))
             {
-                //判断孩子列表是否为空
-                if (haveParent.getChildren() != null)
-                {
-                    haveParent.getChildren().add(orgVo);
-                } else
-                {
-                    haveParent.setChildren(new ArrayList<>());
-                    haveParent.getChildren().add(orgVo);
-                }
-            } else
-            {
-                nodes.add(orgVo);
+                root = orgNode;
+                break;
             }
         }
-        return orgVos;
+        return root;
+    }
+
+    public List<OrgNode> removeRoot(List<OrgNode> orgNodes)
+    {
+        OrgNode root = new OrgNode();
+        for(OrgNode orgNode : orgNodes)
+        {
+            if ("-1".equals(orgNode.getParentNodeId()))
+            {
+                root = orgNode;
+                break;
+            }
+        }
+        orgNodes.remove(root);
+        return orgNodes;
+    }
+
+    public OrgNode tree(OrgNode node, List<OrgNode> orgVos)
+    {
+        for (OrgNode orgNode : orgVos)
+        {
+            if (orgNode.getParentNodeId().equals(node.getId()))
+            {
+                List<OrgNode> childrend = node.getChildren();
+                if(childrend == null)
+                    childrend = new ArrayList<>();
+                childrend.add(orgNode);
+                node.setChildren(childrend);
+                tree(orgNode, orgVos);
+            }
+        }
+        return node;
     }
 }

@@ -109,7 +109,7 @@ public class UserManager
     public void addUser(String userName, String password, String name) throws UserException
     {
         List<User> users = userRepository.findByUserCode(userName);
-        if (users.size() == 0)
+        if (users.size() != 0)
             throw new UserException("用户已存在");
         User user = new User();
         user.setUserCode(userName);

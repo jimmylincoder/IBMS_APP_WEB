@@ -11,10 +11,14 @@ import com.suntek.ibms.repository.AreaRepository;
 import com.suntek.ibms.repository.CameraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -35,8 +39,10 @@ public class InfinvoaConvertManager
     @Autowired
     private TreeBuilder treeBuilder;
 
+    @Transactional(rollbackFor = Exception.class)
     public void init(String ip, String userName, String password) throws IOException, InfinvoaException
     {
+        cameraRepository.deleteAll();
         initCamera(ip, userName, password);
     }
 
@@ -66,4 +72,12 @@ public class InfinvoaConvertManager
         }
         cameraRepository.save(cameras);
     }
+
+    public void initOrg(String ip, String userName, String password) throws IOException, InfinvoaException
+    {
+        List<InfinvoaOrgVo> infinvoaOrgVos = infinvoaManager.getAllOrg(ip, userName, password);
+        OrgNode orgNode = treeBuilder.convert(infinvoaOrgVos);
+    }
+
+
 }

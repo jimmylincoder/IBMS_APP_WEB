@@ -31,5 +31,6 @@ public interface UserRepository extends JpaRepository<User, String>
 
     List<User> findByUserCode(String userName);
 
+    @Transactional
     void deleteByUserCode(String userCode);
 }

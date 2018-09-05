@@ -51,6 +51,9 @@ public class CameraVo implements Serializable
     @JSONField(name = "play_count")
     private String playCount;
 
+    @JSONField(name = "app_show")
+    private Boolean appShow;
+
     public String getId()
     {
         return id;
@@ -179,5 +182,15 @@ public class CameraVo implements Serializable
     public void setPlayCount(String playCount)
     {
         this.playCount = playCount;
+    }
+
+    public void setAppShow(Boolean appShow)
+    {
+        this.appShow = appShow;
+    }
+
+    public Boolean getAppShow()
+    {
+        return appShow;
     }
 }

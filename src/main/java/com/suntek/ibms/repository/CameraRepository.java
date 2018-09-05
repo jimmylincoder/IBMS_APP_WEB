@@ -36,7 +36,7 @@ public interface CameraRepository extends JpaRepository<Camera,String>
 
 
     @Query("select camera from Camera camera where camera.delStatus = 0 and camera.appShow = 1")
-    Page<Camera> findAll(Pageable pageable);
+    Page<Camera> findAllDelStatusAndAppShow(Pageable pageable);
 
     /**
      * 查询对应id的分页摄像机列表

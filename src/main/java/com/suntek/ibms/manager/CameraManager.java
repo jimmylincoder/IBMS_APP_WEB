@@ -67,17 +67,13 @@ public class CameraManager
         Pageable pageable = new PageRequest(page - 1, PAGE_SIZE);
         if (areaId == null || "".equals(areaId) || "01".equals(areaId))
         {
-            cameraPage = cameraRepository.findAll(pageable);
+            cameraPage = cameraRepository.findAllDelStatusAndAppShow(pageable);
             cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
             {
                 @Override
                 public CameraVo convert(Camera camera)
                 {
-                    CameraVo cameraVo = new CameraVo();
-                    BeanUtils.copyProperties(camera, cameraVo);
-                    cameraVo.setOrgCode(camera.getArea().getOgrCode());
-                    cameraVo.setOrgName(camera.getArea().getName());
-                    return cameraVo;
+                    return convertToVo(camera);
                 }
             });
         } else if (areaId != null || !"".equals(areaId))
@@ -96,11 +92,7 @@ public class CameraManager
                     @Override
                     public CameraVo convert(Camera camera)
                     {
-                        CameraVo cameraVo = new CameraVo();
-                        BeanUtils.copyProperties(camera, cameraVo);
-                        cameraVo.setOrgCode(camera.getArea().getOgrCode());
-                        cameraVo.setOrgName(camera.getArea().getName());
-                        return cameraVo;
+                        return convertToVo(camera);
                     }
                 });
             } else
@@ -128,14 +120,19 @@ public class CameraManager
             @Override
             public CameraVo convert(Camera camera)
             {
-                CameraVo cameraVo = new CameraVo();
-                cameraVo.setOrgCode(camera.getArea().getOgrCode());
-                cameraVo.setOrgName(camera.getArea().getName());
-                BeanUtils.copyProperties(camera, cameraVo);
-                return cameraVo;
+                return convertToVo(camera);
             }
         });
         return cameraVoPage;
+    }
+
+    private CameraVo convertToVo(Camera camera)
+    {
+        CameraVo cameraVo = new CameraVo();
+        cameraVo.setOrgCode(camera.getArea().getOgrCode());
+        cameraVo.setOrgName(camera.getArea().getName());
+        BeanUtils.copyProperties(camera, cameraVo);
+        return cameraVo;
     }
 
     /**
@@ -168,11 +165,7 @@ public class CameraManager
     public CameraVo getOne(String cameraId)
     {
         Camera camera = cameraRepository.findOne(cameraId);
-        CameraVo cameraVo = new CameraVo();
-        BeanUtils.copyProperties(camera, cameraVo);
-        cameraVo.setOrgCode(camera.getArea().getOgrCode());
-        cameraVo.setOrgName(camera.getArea().getName());
-        return cameraVo;
+        return convertToVo(camera);
     }
 
     /**
@@ -191,11 +184,8 @@ public class CameraManager
             public CameraVo convert(CameraHistory cameraHistory)
             {
                 Camera camera = cameraHistory.getCamera();
-                CameraVo cameraVo = new CameraVo();
-                BeanUtils.copyProperties(camera, cameraVo);
+                CameraVo cameraVo = convertToVo(camera);
                 cameraVo.setPlayTime(cameraHistory.getPlayTime());
-                cameraVo.setOrgCode(camera.getArea().getOgrCode());
-                cameraVo.setOrgName(camera.getArea().getName());
                 cameraVo.setPlayCount(cameraHistory.getPlayCount() + "");
                 return cameraVo;
             }
@@ -263,5 +253,28 @@ public class CameraManager
         camera.setId(cameraId);
         cameraHistoryRepository.deleteByCameraAndUserCode(camera, userCode);
 
+    }
+
+    public Page<CameraVo> findAll(int page, int pageSize)
+    {
+        Page<Camera> cameraPage = cameraRepository.findAll(new PageRequest(page - 1, pageSize));
+        Page<CameraVo> cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
+        {
+            @Override
+            public CameraVo convert(Camera camera)
+            {
+                return convertToVo(camera);
+            }
+        });
+        return cameraVoPage;
+    }
+
+    public void setAppShow(String id) throws CameraException
+    {
+        Camera camera = cameraRepository.findOne(id);
+        if (camera == null)
+            throw new CameraException("摄像机不存在");
+        camera.setAppShow(!camera.isAppShow());
+        cameraRepository.save(camera);
     }
 }

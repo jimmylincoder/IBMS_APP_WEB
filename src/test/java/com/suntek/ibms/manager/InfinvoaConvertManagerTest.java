@@ -20,7 +20,8 @@ public class InfinvoaConvertManagerTest
     @Test
     public void testInit() throws IOException, InfinvoaException
     {
-        infinvoaManager.init("192.168.0.215","admin","admin");
+        infinvoaManager.initOrg("192.168.0.215","admin","admin");
     }
+
 
 }
