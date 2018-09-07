@@ -79,8 +79,9 @@ public class UserManager
         }
         BeanUtils.copyProperties(user, userVo);
         String deptCode = user.getDeptCode();
-        Area area = areaRepository.findByOgrCode(deptCode);
-        userVo.setDeptName(area.getName());
+        List<Area> areas = areaRepository.findByOgrCode(deptCode);
+        if (areas.size() != 0)
+            userVo.setDeptName(areas.get(0) != null ? areas.get(0).getName() : "");
         return userVo;
     }
 
@@ -118,8 +119,12 @@ public class UserManager
         userRepository.save(user);
     }
 
-    public void del(String userCode)
+    public void del(String userCode) throws UserException
     {
+        if ("admin".equals(userCode))
+        {
+            throw new UserException("管理员账号不能删除");
+        }
         userRepository.deleteByUserCode(userCode);
     }
 }

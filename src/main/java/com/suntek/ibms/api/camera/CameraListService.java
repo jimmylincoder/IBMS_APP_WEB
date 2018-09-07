@@ -41,7 +41,7 @@ public class CameraListService extends ServiceHandler
     @Override
     public Response handle(Request request) throws Exception
     {
-        Page<CameraVo> cameraVoPage = cameraManager.getCameraList(areaId.get(),Integer.parseInt(page.get()));
+        Page<CameraVo> cameraVoPage = cameraManager.getCameraList0(areaId.get(),Integer.parseInt(page.get()));
         return new ResponseBody()
                 .putData("camera_list",cameraVoPage.getContent())
                 .putData("total_page",cameraVoPage.getTotalPages())

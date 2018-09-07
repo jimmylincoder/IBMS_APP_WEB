@@ -89,8 +89,7 @@ public class InfinvoaPlatfromManager
         if (infinvoaPlatforms.size() == 0)
             throw new InfinvoaPlatfromException("未配置平台信息");
         InfinvoaPlatform infinvoaPlatform = infinvoaPlatforms.get(0);
-        infinvoaConvertManager.init(infinvoaPlatform.getIp(), infinvoaPlatform.getUserName(),
-                infinvoaPlatform.getPassword());
+        infinvoaConvertManager.init(infinvoaPlatform);
     }
 
     public InfinvoaPlatformVo findInfo(String id)

@@ -26,7 +26,7 @@ public interface AreaRepository extends JpaRepository<Area,String>
      * @param orgCode
      * @return
      */
-    Area findByOgrCode(String orgCode);
+    List<Area> findByOgrCode(String orgCode);
 
     Area findByNodeFlag(String nodeFlag);
 

@@ -1,8 +1,11 @@
 package com.suntek.ibms.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import javax.xml.ws.Action;
 
 /**
  * 摄像机历史播放表
@@ -22,7 +25,8 @@ public class CameraHistory
 
     //摄像头id
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = true)
-    @JoinColumn(name = "CAMERA_ID",nullable = false)
+    @JoinColumn(name = "CAMERA_ID",nullable = true)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Camera camera;
 
     //播放时间

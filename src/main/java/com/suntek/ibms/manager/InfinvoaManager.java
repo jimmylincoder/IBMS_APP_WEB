@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.suntek.ibms.componet.infinvoa.InfinvoaEngine;
 import com.suntek.ibms.componet.infinvoa.InfinvoaException;
 import com.suntek.ibms.componet.infinvoa.InfinvoaResponse;
+import com.suntek.ibms.componet.infinvoa.vo.InfinvoaCameraResVo;
 import com.suntek.ibms.componet.infinvoa.vo.InfinvoaCameraVo;
 import com.suntek.ibms.componet.infinvoa.vo.InfinvoaOrgVo;
 import com.suntek.ibms.util.LoggerUtil;
@@ -27,7 +28,7 @@ public class InfinvoaManager
 
     public String login(String ip, String userName, String password) throws IOException, InfinvoaException
     {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", "Basic " + Base64.getEncoder().encodeToString((userName + ":" +
                 DigestUtils.md5DigestAsHex(password.getBytes()).toUpperCase()).getBytes()));
@@ -40,7 +41,7 @@ public class InfinvoaManager
     public List<InfinvoaOrgVo> getAllOrg(String ip, String userName, String password) throws IOException, InfinvoaException
     {
         String cookie = login(ip, userName, password);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         Map<String, String> header = new HashMap<>();
         header.put("Cookie", cookie);
         InfinvoaResponse response = infinvoaEngine.requestByGet(ip, "/CMS/action/topology/org/getAll.do", header, params);
@@ -55,10 +56,32 @@ public class InfinvoaManager
         return orgVos;
     }
 
+    public List<InfinvoaCameraResVo> getAllCameraByOrgId(String ip, String userName, String password, String orgId) throws IOException, InfinvoaException
+    {
+        String cookie = login(ip, userName, password);
+        Map<String, Object> params = new HashMap<>();
+        Map<String, String> header = new HashMap<>();
+        params.put("orgId", orgId);
+        params.put("types", "camera");
+        params.put("recursion", "true");
+        header.put("Cookie", cookie);
+        InfinvoaResponse response = infinvoaEngine.requestByGet(ip, "/CMS/action/topology/resourcezonning/getByResourceTypes.do", header, params);
+        List<Map<String, Object>> result = (List<Map<String, Object>>) response.getMsg();
+        List<InfinvoaCameraResVo> cameraResVos = new ArrayList<>();
+        for (Map<String, Object> map : result)
+        {
+            String str = JSON.toJSONString(map);
+            InfinvoaCameraResVo cameraResVo = JSON.parseObject(str, InfinvoaCameraResVo.class);
+            cameraResVos.add(cameraResVo);
+        }
+        return cameraResVos;
+    }
+
+
     public List<InfinvoaCameraVo> getAllCamera(String ip, String userName, String password) throws IOException, InfinvoaException
     {
         String cookie = login(ip, userName, password);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         Map<String, String> header = new HashMap<>();
         header.put("Cookie", cookie);
         InfinvoaResponse response = infinvoaEngine.requestByGet(ip, "/CMS/action/device/camera/getAll.do", header, params);

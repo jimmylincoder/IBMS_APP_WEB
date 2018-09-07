@@ -66,9 +66,11 @@ public class AreaManager
      */
     public AreaVo getRootArea()
     {
-        Area area = areaRepository.findOne("1");
+        List<Area> areas = areaRepository.findByParentId("0");
         AreaVo areaVo = new AreaVo();
-        BeanUtils.copyProperties(area, areaVo);
+        if (areas.size() == 0)
+            return areaVo;
+        BeanUtils.copyProperties(areas.get(0), areaVo);
         return areaVo;
     }
 

@@ -53,6 +53,34 @@ public class CameraManager
     @Autowired
     UserRepository userRepository;
 
+
+    public Page<CameraVo> getCameraList0(String areaId, int page)
+    {
+        Page<Camera> cameraPage = null;
+        Page<CameraVo> cameraVoPage = null;
+        List<Area> areas = areaRepository.findByParentId("0");
+        if (areas.size() == 0)
+            return new PageImpl<CameraVo>(new ArrayList<>());
+        String rootId = areas.get(0).getId();
+        Pageable pageable = new PageRequest(page - 1, PAGE_SIZE);
+        if (areaId == null || "".equals(areaId) || rootId.equals(areaId))
+        {
+            cameraPage = cameraRepository.findAllDelStatusAndAppShow(pageable);
+        } else if (areaId != null || !"".equals(areaId))
+        {
+            cameraPage = cameraRepository.findAllDelStatusAndAppShowAndOrgId(areaId, pageable);
+        }
+        cameraVoPage = cameraPage.map(new Converter<Camera, CameraVo>()
+        {
+            @Override
+            public CameraVo convert(Camera camera)
+            {
+                return convertToVo(camera);
+            }
+        });
+        return cameraVoPage;
+    }
+
     /**
      * 获取摄像机列表
      *
@@ -78,8 +106,9 @@ public class CameraManager
             });
         } else if (areaId != null || !"".equals(areaId))
         {
-            Area area = areaRepository.findByOgrCode(areaId);
-            cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(area.getNodeFlag());
+            List<Area> areas = areaRepository.findByOgrCode(areaId);
+            if (areas.size() != 0)
+                cameraAreaRelPage = cameraAreaRelRepository.findByStructureNodeFlag(areas.get(0).getNodeFlag());
             for (CameraAreaRel cameraAreaRel : cameraAreaRelPage)
             {
                 deviceIds.add(cameraAreaRel.getDeviceFlag());
@@ -204,7 +233,8 @@ public class CameraManager
         if (!cameraRepository.exists(cameraId))
             throw new CameraException("该摄像头不存在");
 
-        if (!userRepository.exists(userCode))
+        List<User> users = userRepository.findByUserCode(userCode);
+        if (users.size() == 0)
             throw new CameraException("该用户不存在");
 
         //查询是否已存在该摄像头信息，不存在更插入，存在则更新时间

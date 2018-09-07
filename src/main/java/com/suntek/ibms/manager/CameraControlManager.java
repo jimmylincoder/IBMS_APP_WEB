@@ -53,7 +53,7 @@ public class CameraControlManager
         Map<String, Object> params = new HashMap<>();
         beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
         endTime = endTime == null ? "" : timeStrToTStr(endTime);
-        Camera camera = cameraRepository.findByDeviceId(deviceId);
+        Camera camera = cameraRepository.findFirstByDeviceId(deviceId);
         String deviceIp = camera.getIp();
         params.put("DeviceID", deviceId);
         params.put("DeviceIP", deviceIp);
@@ -148,7 +148,7 @@ public class CameraControlManager
     public List<RecordItem> queryRecordFile(String deviceId, String parentId, String beginTime,
                                             String endTime, String protocol) throws Exception
     {
-        Camera camera = cameraRepository.findByDeviceId(deviceId);
+        Camera camera = cameraRepository.findFirstByDeviceId(deviceId);
         String deviceIp = camera.getIp();
         Map<String, Object> params = new HashMap<>();
         params.put("DeviceID", deviceId);
@@ -247,7 +247,7 @@ public class CameraControlManager
         Map<String, Object> params = new HashMap<>();
         beginTime = beginTime == null ? "" : timeStrToTStr(beginTime);
         endTime = endTime == null ? "" : timeStrToTStr(endTime);
-        Camera camera = cameraRepository.findByDeviceId(deviceId);
+        Camera camera = cameraRepository.findFirstByDeviceId(deviceId);
         params.put("Protocol", "Hikvision");
         params.put("DeviceIP", camera.getIp());
         params.put("MediaChannel", mediaChannel);

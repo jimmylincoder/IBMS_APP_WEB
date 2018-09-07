@@ -13,12 +13,12 @@ import java.util.List;
  *
  * @author jimmy
  */
-public interface CameraRepository extends JpaRepository<Camera,String>
+public interface CameraRepository extends JpaRepository<Camera, String>
 {
     /**
      * 通过区域id获取摄像机列表
      *
-     * @param areaId  摄像机id
+     * @param areaId 摄像机id
      * @return
      */
     @Query("select camera from Camera camera where camera.area.id like ?1% and camera.delStatus = 0 and camera.appShow = 1 Order by camera.isUsed desc")
@@ -32,11 +32,15 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @return
      */
     @Query("select camera from Camera camera where camera.name like %?1% and camera.delStatus = 0 and camera.appShow = 1")
-    Page<Camera> findByNameLike(String name,Pageable pageable);
+    Page<Camera> findByNameLike(String name, Pageable pageable);
 
 
     @Query("select camera from Camera camera where camera.delStatus = 0 and camera.appShow = 1")
     Page<Camera> findAllDelStatusAndAppShow(Pageable pageable);
+
+
+    @Query("select camera from Camera camera where camera.delStatus = 0 and camera.appShow = 1 and camera.area.id = ?1")
+    Page<Camera> findAllDelStatusAndAppShowAndOrgId(String id, Pageable pageable);
 
     /**
      * 查询对应id的分页摄像机列表
@@ -45,11 +49,13 @@ public interface CameraRepository extends JpaRepository<Camera,String>
      * @param pageable
      * @return
      */
-    Page<Camera> findByIdIn(List<String> cameraId,Pageable pageable);
+    Page<Camera> findByIdIn(List<String> cameraId, Pageable pageable);
 
     @Query("select camera from Camera camera where camera.deviceId in ?1 and camera.delStatus = 0 and camera.appShow = 1")
-    Page<Camera> findByDeviceIdIn(List<String> deviceIds,Pageable pageable);
+    Page<Camera> findByDeviceIdIn(List<String> deviceIds, Pageable pageable);
 
     @Query("select camera from Camera camera where camera.deviceId = ?1 and camera.appShow = 1")
-    Camera findByDeviceId(String deviceId);
+    Camera findByDeviceIdAndAppShow(String deviceId);
+
+    Camera findFirstByDeviceId(String deviceId);
 }
